@@ -1,6 +1,12 @@
 pluginManagement {
   repositories {
-    google()
+    google {
+      content {
+        includeGroupByRegex("com\\.android.*")
+        includeGroupByRegex("com\\.google.*")
+        includeGroupByRegex("androidx.*")
+      }
+    }
     mavenCentral()
     gradlePluginPortal()
   }
@@ -13,12 +19,8 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "Something Calc"
+rootProject.name = "GPT Chat Room"
 include(":app")
 include(":core:designsystem")
 include(":core:ui")
-include(":core:utility")
-include(":core:logger")
-include(":feature:login")
-include(":feature:chat")
-include(":core:navigation")
+include(":core:model")
