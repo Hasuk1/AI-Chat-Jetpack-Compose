@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import com.example.designsystem.theme.GPTChatRoomTheme
+import com.example.designsystem.theme.AIChatTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
     WindowCompat.setDecorFitsSystemWindows(window, true)
     super.onCreate(savedInstanceState)
     setContent {
-      GPTChatRoomTheme {
+      AIChatTheme {
         Column(
           modifier = Modifier
             .fillMaxSize()

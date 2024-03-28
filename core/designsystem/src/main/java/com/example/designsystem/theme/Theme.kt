@@ -92,7 +92,7 @@ private val darkScheme = darkColorScheme(
 )
 
 @Composable
-fun GPTChatRoomTheme(
+fun AIChatTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   dynamicColor: Boolean = false,
   content: @Composable() () -> Unit
