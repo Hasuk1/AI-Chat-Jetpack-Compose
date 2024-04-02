@@ -1,12 +1,15 @@
 package com.feature.authentification
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -19,10 +22,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -83,51 +84,32 @@ fun ScaffoldExample(goTest: () -> Unit) {
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthenticationScreen(
   viewModel: AuthenticationViewModel = hiltViewModel()
 ) {
 
   AIChatTheme {
-    Scaffold(topBar = {
-      TopAppBar(colors = topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        titleContentColor = MaterialTheme.colorScheme.primary,
-      ), title = {
-//        Text("Top app bar")
-//        Row {
-//        Image(
-//          painter = rememberAsyncImagePainter(model = "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"),
-//          modifier = Modifier
-//            .padding(7.dp)
-//            .size(190.dp),
-//          contentDescription = "",
-//          contentScale = ContentScale.Crop
-//        )
-//        }
-      })
-    }) { innerPadding ->
-      Column(
-        modifier = Modifier.padding(innerPadding),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .background(color = MaterialTheme.colorScheme.background)
+    ) {
+      Row(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(60.dp)
+          .background(color = MaterialTheme.colorScheme.primaryContainer),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
       ) {
         Image(
-          painter = rememberAsyncImagePainter(model = "https://www.edigitalagency.com.au/wp-content/uploads/chatgpt-logo-white-green-background-png.png"),
+          painter = rememberAsyncImagePainter(model = "https://raw.githubusercontent.com/Hasuk1/AI-Chat-Jetpack-Compose/main/misc/chat_gpt_logo.png"),
           contentDescription = "",
-          modifier = Modifier
-            .padding(7.dp)
-            .size(190.dp)
-            .clip(
-              MaterialTheme.shapes.medium.copy(
-                topEnd = CornerSize(20.dp),
-                topStart = CornerSize(20.dp),
-                bottomEnd = CornerSize(0.dp),
-                bottomStart = CornerSize(20.dp)
-              )
-            )
+          modifier = Modifier.size(50.dp)
         )
       }
     }
+
   }
 }
