@@ -6,6 +6,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
@@ -16,6 +17,7 @@ object AppIcons {
   val ArrowBack = Icons.Rounded.ArrowBack
   val Check = Icons.Rounded.Check
   val Close = Icons.Rounded.Close
+  val Info = Icons.Rounded.Info
   val MoreVert = Icons.Default.MoreVert
   val Person = Icons.Rounded.Person
   val Search = Icons.Rounded.Search
