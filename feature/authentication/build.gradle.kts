@@ -1,23 +1,17 @@
 plugins {
-  alias(libs.plugins.androidApplication)
+  alias(libs.plugins.androidLibrary)
   alias(libs.plugins.jetbrainsKotlinAndroid)
 }
 
 android {
-  namespace = "com.example.aichat"
+  namespace = "com.feature.authentication"
   compileSdk = 34
 
   defaultConfig {
-    applicationId = "com.example.aichat"
     minSdk = 24
-    targetSdk = 34
-    versionCode = 1
-    versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    vectorDrawables {
-      useSupportLibrary = true
-    }
+    consumerProguardFiles("consumer-rules.pro")
   }
 
   buildTypes {
@@ -60,17 +54,13 @@ dependencies {
   implementation(libs.androidx.navigation.dynamic.features.fragment)
   implementation(libs.androidx.navigation.compose)
 
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.appcompat)
+  implementation(libs.material)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
-  androidTestImplementation(platform(libs.androidx.compose.bom))
-  androidTestImplementation(libs.androidx.ui.test.junit4)
-  debugImplementation(libs.androidx.ui.tooling)
-  debugImplementation(libs.androidx.ui.test.manifest)
 
   implementation(project(":core:designsystem"))
-
-  implementation(project(":feature:authentication"))
-  implementation(project(":feature:chat"))
-
+  implementation(project(":core:ui"))
 }
