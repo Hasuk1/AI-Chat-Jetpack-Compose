@@ -1,6 +1,8 @@
 plugins {
   alias(libs.plugins.androidApplication)
   alias(libs.plugins.jetbrainsKotlinAndroid)
+  kotlin("kapt")
+  alias(libs.plugins.dagerHiltAndroid)
 }
 
 android {
@@ -60,6 +62,11 @@ dependencies {
   implementation(libs.androidx.navigation.dynamic.features.fragment)
   implementation(libs.androidx.navigation.compose)
 
+  implementation(libs.hilt.android)
+  kapt(libs.hilt.android.compiler)
+  kapt(libs.androidx.hilt.compiler)
+  implementation(libs.androidx.hilt.navigation.compose)
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
@@ -72,5 +79,8 @@ dependencies {
 
   implementation(project(":feature:authentication"))
   implementation(project(":feature:chat"))
+}
 
+kapt {
+  correctErrorTypes = true
 }
