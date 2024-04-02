@@ -1,6 +1,8 @@
 plugins {
   alias(libs.plugins.androidLibrary)
   alias(libs.plugins.jetbrainsKotlinAndroid)
+  kotlin("kapt")
+  alias(libs.plugins.dagerHiltAndroid)
 }
 
 android {
@@ -53,6 +55,12 @@ dependencies {
   implementation(libs.androidx.navigation.ui.ktx)
   implementation(libs.androidx.navigation.dynamic.features.fragment)
   implementation(libs.androidx.navigation.compose)
+  implementation(libs.coil.compose)
+
+  implementation(libs.hilt.android)
+  kapt(libs.hilt.android.compiler)
+  kapt(libs.androidx.hilt.compiler)
+  implementation(libs.androidx.hilt.navigation.compose)
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
@@ -63,4 +71,8 @@ dependencies {
 
   implementation(project(":core:designsystem"))
   implementation(project(":core:ui"))
+}
+
+kapt {
+  correctErrorTypes = true
 }

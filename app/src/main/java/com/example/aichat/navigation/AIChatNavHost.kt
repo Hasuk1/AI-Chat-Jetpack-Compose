@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.chat.AuthS
+import com.feature.authentification.AuthenticationScreen
 import com.feature.authentification.ScaffoldExample
 
 @Composable
@@ -15,9 +16,10 @@ fun AIChatNavHost(navController: NavHostController, startRoute: String) {
   val context = LocalContext.current
   NavHost(navController = navController, startDestination = startRoute) {
     composable(AIChatAppScreens.AUTHSCREEN.route) {
-      ScaffoldExample(){
-        navController.navigate(AIChatAppScreens.CHATSCREEN.route)
-      }
+//      ScaffoldExample(){
+//        navController.navigate(AIChatAppScreens.CHATSCREEN.route)
+//      }
+      AuthenticationScreen()
     }
     composable(AIChatAppScreens.CHATSCREEN.route) {
       AuthS(){
