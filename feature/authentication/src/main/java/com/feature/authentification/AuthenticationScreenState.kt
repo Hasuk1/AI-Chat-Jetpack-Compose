@@ -24,14 +24,9 @@
 
 package com.feature.authentification
 
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
+import com.example.common.ApiList
 
-@HiltViewModel
-class AuthenticationViewModel @Inject constructor() :ViewModel(){
-  private val _state = MutableStateFlow(AuthenticationScreenState())
-  val state = _state.asStateFlow()
-}
+data class AuthenticationScreenState(
+  val userEnteredKey:String = "",
+  var selectedApi: ApiList = ApiList.NEURO
+)

@@ -22,16 +22,9 @@
  * SOFTWARE.
  */
 
-package com.feature.authentification
+package com.example.common
 
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
-
-@HiltViewModel
-class AuthenticationViewModel @Inject constructor() :ViewModel(){
-  private val _state = MutableStateFlow(AuthenticationScreenState())
-  val state = _state.asStateFlow()
+enum class ApiList(val baseUrl:String) {
+  NEURO("https://eu.neuroapi.host/"),
+  OPENAI("https://api.openai.com/")
 }
