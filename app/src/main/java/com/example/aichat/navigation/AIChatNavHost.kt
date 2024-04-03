@@ -9,26 +9,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.chat.AuthS
 import com.feature.authentification.AuthenticationScreen
-import com.feature.authentification.ScaffoldExample
 
 @Composable
 fun AIChatNavHost(navController: NavHostController, startRoute: String) {
-  val context = LocalContext.current
   NavHost(navController = navController, startDestination = startRoute) {
     composable(AIChatAppScreens.AUTHSCREEN.route) {
-//      ScaffoldExample(){
-//        navController.navigate(AIChatAppScreens.CHATSCREEN.route)
-//      }
-      AuthenticationScreen()
+      AuthenticationScreen{
+        navController.navigate(AIChatAppScreens.CHATSCREEN.route){
+          popUpTo(AIChatAppScreens.AUTHSCREEN.route){
+            inclusive = true
+          }
+        }
+      }
     }
     composable(AIChatAppScreens.CHATSCREEN.route) {
       AuthS(){
-        context.startActivity(
-          Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://github.com/Hasuk1")
-          )
-        )
+
       }
     }
   }

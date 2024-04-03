@@ -22,16 +22,12 @@
  * SOFTWARE.
  */
 
-package com.feature.authentification
+package com.example.designsystem.icons
 
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
+import com.example.designsystem.R
 
-@HiltViewModel
-class AuthenticationViewModel @Inject constructor() :ViewModel(){
-  private val _state = MutableStateFlow(AuthenticationScreenState())
-  val state = _state.asStateFlow()
+object AppImageIcons {
+  val Ai = R.drawable.ai_logo
+  val GptApi = R.drawable.gpt_api_logo
+  val NeuroApi = R.drawable.neuro_api_logo
 }
