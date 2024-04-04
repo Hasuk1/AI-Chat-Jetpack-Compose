@@ -25,13 +25,18 @@
 package com.feature.authentification
 
 import androidx.lifecycle.ViewModel
+import com.example.common.ApiList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthenticationViewModel @Inject constructor() :ViewModel(){
+class AuthenticationViewModel @Inject constructor() : ViewModel() {
   private val _state = MutableStateFlow(AuthenticationScreenState())
   val state = _state.asStateFlow()
+
+  fun updateSelectedApi(newApi: ApiList) {
+    _state.value = _state.value.copy(selectedApi = newApi)
+  }
 }

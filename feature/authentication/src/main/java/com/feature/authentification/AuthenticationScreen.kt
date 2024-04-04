@@ -124,13 +124,15 @@ fun AuthenticationScreen(
       ) {
         val activateButtonColorFilter =
           ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
-        val unActivateButtonColorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+        val unActivateButtonColorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
         Box(contentAlignment = Alignment.Center,
           modifier = Modifier
             .fillMaxHeight()
             .fillMaxWidth(0.5f)
             .clip(RoundedCornerShape(10.dp))
-            .clickable { state.selectedApi = ApiList.NEURO }) {
+            .clickable {
+              viewModel.updateSelectedApi(ApiList.NEURO)
+            }) {
           Image(
             painter = rememberAsyncImagePainter(model = AppImageIcons.NeuroApi),
             modifier = Modifier.fillMaxSize(0.5f),
@@ -142,7 +144,9 @@ fun AuthenticationScreen(
           modifier = Modifier
             .fillMaxSize()
             .clip(RoundedCornerShape(10.dp))
-            .clickable { state.selectedApi = ApiList.OPENAI }) {
+            .clickable {
+              viewModel.updateSelectedApi(ApiList.OPENAI)
+            }) {
           Image(
             painter = rememberAsyncImagePainter(model = AppImageIcons.GptApi),
             modifier = Modifier.fillMaxSize(0.5f),
