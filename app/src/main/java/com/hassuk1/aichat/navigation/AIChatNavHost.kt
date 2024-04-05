@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.hassuk1.aichat.PartiallySelectableText
 import com.hassuk1.feature.authentication.AuthenticationScreen
 
 @Composable
@@ -21,7 +20,7 @@ fun AIChatNavHost(navController: NavHostController, startRoute: String) {
 
     }
     composable(AIChatAppScreens.CHATSCREEN.route) {
-      PartiallySelectableText()
+
     }
   }
 }

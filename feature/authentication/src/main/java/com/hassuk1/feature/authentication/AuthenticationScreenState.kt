@@ -27,5 +27,5 @@ package com.hassuk1.feature.authentication
 import com.hassuk1.core.model.ApiConfig
 
 data class AuthenticationScreenState(
-  val userEnteredKey: String = "", var selectedApi: ApiConfig = ApiConfig.NEURO
+  val userEnteredKey: String = "", var userSelectedApi: ApiConfig = ApiConfig.NEURO
 )

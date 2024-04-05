@@ -137,7 +137,7 @@ fun AuthenticationScreen(
             painter = rememberAsyncImagePainter(model = AppImageIcons.NeuroApi),
             modifier = Modifier.fillMaxSize(0.5f),
             contentDescription = "neuro_logo",
-            colorFilter = if (state.selectedApi == ApiConfig.NEURO) activateButtonColorFilter else unActivateButtonColorFilter
+            colorFilter = if (state.userSelectedApi == ApiConfig.NEURO) activateButtonColorFilter else unActivateButtonColorFilter
           )
         }
         Box(contentAlignment = Alignment.Center,
@@ -151,7 +151,7 @@ fun AuthenticationScreen(
             painter = rememberAsyncImagePainter(model = AppImageIcons.GptApi),
             modifier = Modifier.fillMaxSize(0.5f),
             contentDescription = "gpt_logo",
-            colorFilter = if (state.selectedApi == ApiConfig.OPENAI) activateButtonColorFilter else unActivateButtonColorFilter
+            colorFilter = if (state.userSelectedApi == ApiConfig.OPENAI) activateButtonColorFilter else unActivateButtonColorFilter
           )
         }
       }

@@ -37,6 +37,7 @@ class AuthenticationViewModel @Inject constructor() : ViewModel() {
   val state = _state.asStateFlow()
 
   fun updateSelectedApi(newApi: ApiConfig) {
-    _state.value = _state.value.copy(selectedApi = newApi)
+    _state.value = _state.value.copy(userSelectedApi = newApi)
+
   }
 }
