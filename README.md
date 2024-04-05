@@ -1,1 +1,1 @@
-# GPT-Chat-Room
+# AI Chat Jetpack Compose
