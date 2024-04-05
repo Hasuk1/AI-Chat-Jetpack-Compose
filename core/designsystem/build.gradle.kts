@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-  namespace = "com.example.designsystem"
+  namespace = "com.hassuk1.core.designsystem"
   compileSdk = 34
 
   defaultConfig {
@@ -32,6 +32,13 @@ android {
   }
   composeOptions {
     kotlinCompilerExtensionVersion = "1.5.11"
+  }
+  sourceSets {
+    getByName("main") {
+      res {
+        srcDirs("src/main/res")
+      }
+    }
   }
 }
 

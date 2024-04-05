@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-  namespace = "com.example.aichat"
+  namespace = "com.hassuk1.aichat"
   compileSdk = 34
 
   defaultConfig {
-    applicationId = "com.example.aichat"
+    applicationId = "com.hassuk1.aichat"
     minSdk = 24
     targetSdk = 34
     versionCode = 1
@@ -57,6 +57,7 @@ dependencies {
   implementation(libs.androidx.ui.graphics)
   implementation(libs.androidx.ui.tooling.preview)
   implementation(libs.androidx.material3)
+
   implementation(libs.androidx.navigation.fragment.ktx)
   implementation(libs.androidx.navigation.ui.ktx)
   implementation(libs.androidx.navigation.dynamic.features.fragment)
@@ -75,10 +76,7 @@ dependencies {
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
 
-  implementation(project(":core:designsystem"))
-
   implementation(project(":feature:authentication"))
-  implementation(project(":feature:chat"))
 }
 
 kapt {

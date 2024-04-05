@@ -19,11 +19,11 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "GPT Chat Room"
+rootProject.name = "AI-Chat-Jetpack-Compose"
 include(":app")
-include(":core:designsystem")
-include(":core:ui")
-include(":core:model")
-include(":feature:authentication")
 include(":feature:chat")
-include(":core:common")
+include(":feature:authentication")
+include(":core:model")
+include(":core:ui")
+include(":core:data")
+include(":core:designsystem")
