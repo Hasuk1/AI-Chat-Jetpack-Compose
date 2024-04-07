@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.androidLibrary)
   alias(libs.plugins.jetbrainsKotlinAndroid)
   kotlin("kapt")
+  alias(libs.plugins.dagerHiltAndroid)
 }
 
 android {
@@ -42,15 +43,21 @@ dependencies {
     exclude(group = "org.jetbrains", module = "annotations")
     exclude(group = "com.intellij", module = "annotations")
   }
-  implementation(libs.room.compiler) {
+  kapt(libs.room.compiler) {
     exclude(group = "org.jetbrains", module = "annotations")
     exclude(group = "com.intellij", module = "annotations")
   }
   implementation(libs.room.ktx)
+
+  implementation(libs.hilt.android)
+  kapt(libs.hilt.android.compiler)
+  kapt(libs.androidx.hilt.compiler)
+  implementation(libs.androidx.hilt.navigation.compose)
 
   implementation(project(":core:model"))
 }
 
 kapt {
   correctErrorTypes = true
+  includeCompileClasspath = false
 }
