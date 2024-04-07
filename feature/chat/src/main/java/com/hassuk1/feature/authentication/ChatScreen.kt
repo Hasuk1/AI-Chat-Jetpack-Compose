@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,8 +46,8 @@ import com.hassuk1.core.model.ApiConfig
 const val GIT_LINK = "https://github.com/Hasuk1"
 
 @Composable
-fun AuthenticationScreen(
-  viewModel: AuthenticationViewModel = hiltViewModel(), goChat: () -> Unit
+fun ChatScreen(
+  viewModel: ChatViewModel = hiltViewModel(), goChat: () -> Unit
 ) {
   val context = LocalContext.current
   val state by viewModel.state.collectAsState()
@@ -61,12 +60,11 @@ fun AuthenticationScreen(
       Box(
         modifier = Modifier
           .fillMaxWidth()
-          .height(90.dp)
-          .background(color = MaterialTheme.colorScheme.primaryContainer),
-        contentAlignment = Alignment.BottomStart
+          .height(40.dp)
+          .background(color = MaterialTheme.colorScheme.primaryContainer)
       ) {
         Row(
-          modifier = Modifier.fillMaxWidth().height(40.dp),
+          modifier = Modifier.fillMaxSize(),
           verticalAlignment = Alignment.CenterVertically,
           horizontalArrangement = Arrangement.Center
         ) {
@@ -85,7 +83,7 @@ fun AuthenticationScreen(
         }
         var openAlertDialog by remember { mutableStateOf(false) }
         Row(
-          modifier = Modifier.fillMaxWidth().height(40.dp),
+          modifier = Modifier.fillMaxSize(),
           verticalAlignment = Alignment.CenterVertically,
           horizontalArrangement = Arrangement.End
         ) {

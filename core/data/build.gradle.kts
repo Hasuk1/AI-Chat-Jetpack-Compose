@@ -1,6 +1,8 @@
 plugins {
   alias(libs.plugins.androidLibrary)
   alias(libs.plugins.jetbrainsKotlinAndroid)
+  kotlin("kapt")
+  alias(libs.plugins.dagerHiltAndroid)
 }
 
 android {
@@ -36,4 +38,17 @@ dependencies {
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
+
+  implementation(libs.hilt.android)
+  kapt(libs.hilt.android.compiler)
+  kapt(libs.androidx.hilt.compiler)
+  implementation(libs.androidx.hilt.navigation.compose)
+
+  implementation(project(":core:database"))
+  implementation(project(":core:model"))
+
+}
+
+kapt {
+  correctErrorTypes = true
 }
