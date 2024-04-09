@@ -8,5 +8,5 @@ import com.hassuk1.core.model.ApiConfig
 data class UserDataTable (
   @PrimaryKey(autoGenerate = true) val id: Long = 0,
   val selectedApiUrl: String = ApiConfig.NEURO.baseUrl,
-  val userKey: String?
+  val userKey: String = ""
 )

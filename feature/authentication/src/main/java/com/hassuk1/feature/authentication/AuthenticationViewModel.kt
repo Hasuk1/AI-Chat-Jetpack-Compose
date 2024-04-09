@@ -24,20 +24,66 @@
 
 package com.hassuk1.feature.authentication
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.hassuk1.core.data.repository.UserDataRepository
+import com.hassuk1.core.database.UserDataTable
 import com.hassuk1.core.model.ApiConfig
+import com.hassuk1.core.model.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthenticationViewModel @Inject constructor() : ViewModel() {
+class AuthenticationViewModel @Inject constructor(private val userRepository: UserDataRepository) :
+  ViewModel() {
   private val _state = MutableStateFlow(AuthenticationScreenState())
   val state = _state.asStateFlow()
 
-  fun updateSelectedApi(newApi: ApiConfig) {
-    _state.value = _state.value.copy(userSelectedApi = newApi)
+  init {
+    testDB()
+  }
 
+  fun updateSelectedApi(newApi: ApiConfig) {
+    viewModelScope.launch {
+      _state.value = _state.value.copy(userSelectedApi = newApi)
+      val id = userRepository.saveUserData(
+        UserDataTable(
+          id = 1, selectedApiUrl = _state.value.userSelectedApi.baseUrl, userKey = _state.value.userEnteredKey
+        )
+      )
+      Log.d("MyLog", "new insert id=$id")
+    }
+  }
+
+  fun updateEnteredKey(newKey:String){
+    viewModelScope.launch {
+      _state.value = _state.value.copy(userEnteredKey = newKey)
+      val id = userRepository.saveUserData(
+        UserDataTable(
+          id = 1, selectedApiUrl = _state.value.userSelectedApi.baseUrl, userKey = _state.value.userEnteredKey
+        )
+      )
+      Log.d("MyLog", "new insert id=$id")
+    }
+  }
+
+  fun testDB() {
+    viewModelScope.launch {
+      userRepository.getUserData().collect { userData ->
+        Log.d("MyLog", "Api=$userData")
+        if (userData != null) {
+          _state.value = _state.value.copy(
+            userEnteredKey = userData.userKey,
+            userSelectedApi = if (userData.selectedApiUrl == ApiConfig.NEURO.baseUrl) ApiConfig.NEURO else ApiConfig.OPENAI
+          )
+        }
+      }
+    }
   }
 }
+
