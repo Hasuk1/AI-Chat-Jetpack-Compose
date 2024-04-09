@@ -7,13 +7,11 @@ import javax.inject.Inject
 
 class UserDataRepositoryImpl @Inject constructor(private val userDataDao: UserDataDao) :
   UserDataRepository {
-  override suspend fun saveUserData(userData: UserDataTable) {
-    userDataDao.insertUserData(userData)
-    userDataDao.updateUserData(userData.id, userData.userKey, userData.selectedApiUrl)
+  override suspend fun saveUserData(userData: UserDataTable):List<Long> {
+    return userDataDao.insertUserData(userData)
   }
 
   override suspend fun getUserData(): Flow<UserDataTable?> {
     return userDataDao.getUserData()
   }
-
 }

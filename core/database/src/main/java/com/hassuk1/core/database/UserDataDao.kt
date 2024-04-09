@@ -12,9 +12,6 @@ interface UserDataDao {
   @Query("SELECT * FROM user_data")
   fun getUserData(): Flow<UserDataTable?>
 
-  @Insert(onConflict = OnConflictStrategy.IGNORE)
-  suspend fun insertUserData(vararg userData: UserDataTable)
-
-  @Query("UPDATE user_data SET selectedApiUrl = :selectedApiUrl, userKey = :userKey WHERE id = :id")
-  suspend fun updateUserData(id: Long, selectedApiUrl: String?, userKey: String)
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertUserData(vararg userData: UserDataTable):List<Long>
 }

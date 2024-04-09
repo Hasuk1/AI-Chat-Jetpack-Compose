@@ -44,16 +44,46 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
   private val _state = MutableStateFlow(AuthenticationScreenState())
   val state = _state.asStateFlow()
 
+  init {
+    testDB()
+  }
 
   fun updateSelectedApi(newApi: ApiConfig) {
     viewModelScope.launch {
       _state.value = _state.value.copy(userSelectedApi = newApi)
-      userRepository.saveUserData(UserDataTable(selectedApiUrl = newApi.baseUrl,userKey = ""))
-      userRepository.getUserData().collect { userData ->
-        Log.d("MyLog","Api=$userData")
-      }
+      val id = userRepository.saveUserData(
+        UserDataTable(
+          id = 1, selectedApiUrl = _state.value.userSelectedApi.baseUrl, userKey = _state.value.userEnteredKey
+        )
+      )
+      Log.d("MyLog", "new insert id=$id")
     }
   }
 
+  fun updateEnteredKey(newKey:String){
+    viewModelScope.launch {
+      _state.value = _state.value.copy(userEnteredKey = newKey)
+      val id = userRepository.saveUserData(
+        UserDataTable(
+          id = 1, selectedApiUrl = _state.value.userSelectedApi.baseUrl, userKey = _state.value.userEnteredKey
+        )
+      )
+      Log.d("MyLog", "new insert id=$id")
+    }
+  }
+
+  fun testDB() {
+    viewModelScope.launch {
+      userRepository.getUserData().collect { userData ->
+        Log.d("MyLog", "Api=$userData")
+        if (userData != null) {
+          _state.value = _state.value.copy(
+            userEnteredKey = userData.userKey,
+            userSelectedApi = if (userData.selectedApiUrl == ApiConfig.NEURO.baseUrl) ApiConfig.NEURO else ApiConfig.OPENAI
+          )
+        }
+      }
+    }
+  }
 }
 
