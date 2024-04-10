@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -42,10 +44,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,8 +62,10 @@ import com.hassuk1.core.designsystem.icons.AppIcons
 import com.hassuk1.core.designsystem.icons.AppImageIcons
 import com.hassuk1.core.designsystem.theme.AIChatTheme
 import com.hassuk1.core.model.ApiConfig
+import com.hassuk1.feature.authentication.components.InfoAlertDialog
+import com.hassuk1.feature.authentication.components.InputUserKeyBar
 
-const val GIT_LINK = "https://github.com/Hasuk1"
+const val GIT_LINK = "https://github.com/Hasuk1/AI-Chat-Jetpack-Compose"
 
 @Composable
 fun AuthenticationScreen(
@@ -65,13 +74,17 @@ fun AuthenticationScreen(
   val context = LocalContext.current
   val state by viewModel.state.collectAsState()
   var hideKeyboard by remember { mutableStateOf(false) }
+  var isAlertDialogOpen by remember { mutableStateOf(false) }
 
   AIChatTheme {
-    Column(
-      modifier = Modifier
-        .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.background)
-    ) {
+    Column(modifier = Modifier
+      .fillMaxSize()
+      .background(color = MaterialTheme.colorScheme.background)
+      .clickable(
+        interactionSource = remember { MutableInteractionSource() }, indication = null
+      ) {
+        hideKeyboard = !hideKeyboard
+      }) {
       Box(
         modifier = Modifier
           .fillMaxWidth()
@@ -99,7 +112,7 @@ fun AuthenticationScreen(
                 )
               })
         }
-        var openAlertDialog by remember { mutableStateOf(false) }
+
         Row(
           modifier = Modifier
             .fillMaxWidth()
@@ -108,17 +121,17 @@ fun AuthenticationScreen(
           horizontalArrangement = Arrangement.End
         ) {
           IconButton(
-            onClick = { openAlertDialog = true }, colors = IconButtonDefaults.iconButtonColors(
+            onClick = { isAlertDialogOpen = true }, colors = IconButtonDefaults.iconButtonColors(
               contentColor = MaterialTheme.colorScheme.primary
             )
           ) {
             Icon(AppIcons.Info, contentDescription = "Info")
           }
         }
-        if (openAlertDialog) {
+        if (isAlertDialogOpen) {
           InfoAlertDialog(
-            onDismissRequest = { openAlertDialog = false },
-            onConfirmation = { openAlertDialog = false },
+            onDismissRequest = { isAlertDialogOpen = false },
+            onConfirmation = { isAlertDialogOpen = false },
             dialogTitle = "Information",
             dialogText = "Some information.\nSome information.\nSome information.\nSome information.",
           )
@@ -131,8 +144,7 @@ fun AuthenticationScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        InputUserKeyBar(
-          state = state,
+        InputUserKeyBar(state = state,
           hint = "ApiKey",
           hideKeyboard = hideKeyboard,
           onFocusClear = { hideKeyboard = false },
@@ -149,10 +161,16 @@ fun AuthenticationScreen(
             contentColor = MaterialTheme.colorScheme.onPrimary
           )
         ) {
-          Text(text = "Save", fontSize = 20.sp)
+          Text(text = "Connect", fontSize = 20.sp)
         }
-        TextButton(onClick = goChat) {
-          Text("Read more about OpenAI apikey")
+        TextButton(onClick = {
+          context.startActivity(
+            Intent(
+              Intent.ACTION_VIEW, Uri.parse(state.userSelectedApi.docsUsl)
+            )
+          )
+        }) {
+          Text("Read more about ${state.userSelectedApi.apiName} apikey")
         }
       }
       Row(
@@ -197,94 +215,5 @@ fun AuthenticationScreen(
       }
     }
 
-  }
-}
-
-@Composable
-fun InfoAlertDialog(
-  onDismissRequest: () -> Unit, onConfirmation: () -> Unit, dialogTitle: String, dialogText: String
-) {
-  AlertDialog(icon = {
-    Icon(Icons.Default.Info, contentDescription = "Alert Dialog Icon")
-  }, title = {
-    Text(text = dialogTitle)
-  }, text = {
-    Text(text = dialogText)
-  }, onDismissRequest = onDismissRequest, confirmButton = {
-    TextButton(onClick = onConfirmation) {
-      Text("Close")
-    }
-  })
-}
-
-
-@Composable
-fun InputUserKeyBar(
-  state: AuthenticationScreenState,
-  hint: String = "",
-  hideKeyboard: Boolean = false,
-  onFocusClear: () -> Unit = {},
-  onDone: (String) -> Unit = {}
-) {
-
-  var isHintDisplayed by remember { mutableStateOf(false) }
-  val focusManager = LocalFocusManager.current
-  Row(
-    modifier = Modifier
-      .padding(20.dp)
-      .fillMaxWidth(0.95f)
-      .height(50.dp)
-      .background(
-        color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(20.dp)
-      ), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start
-  ) {
-    Image(
-      painter = rememberAsyncImagePainter(model = AppImageIcons.Key),
-      modifier = Modifier
-        .padding(start = 15.dp, end = 5.dp)
-        .height(20.dp),
-      contentDescription = "gpt_logo",
-      colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
-    )
-    BasicTextField(value = state.userEnteredKey,
-      onValueChange = {
-        if (it.length <= 51) {
-          onDone(it)
-        }
-      },
-      modifier = Modifier
-        .padding(end = 15.dp)
-        .fillMaxSize()
-        .wrapContentHeight(align = Alignment.CenterVertically)
-        .onFocusChanged {
-          isHintDisplayed = !it.hasFocus
-        },
-      keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-      keyboardActions = KeyboardActions(onDone = {
-        focusManager.clearFocus()
-        onDone(state.userEnteredKey)
-      }),
-      singleLine = true,
-      textStyle = TextStyle(
-        color = MaterialTheme.colorScheme.onPrimaryContainer,
-        fontSize = 20.sp,
-        textAlign = TextAlign.Start
-      ),
-      decorationBox = { innerTextField ->
-        Row {
-          if (isHintDisplayed && state.userEnteredKey.isEmpty()) {
-            Text(
-              text = hint,
-              fontSize = 15.sp,
-              color = MaterialTheme.colorScheme.secondary,
-            )
-          }
-        }
-        innerTextField()
-      })
-  }
-  if (hideKeyboard) {
-    focusManager.clearFocus()
-    onFocusClear()
   }
 }
