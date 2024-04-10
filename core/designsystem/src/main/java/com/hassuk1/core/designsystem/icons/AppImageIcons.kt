@@ -31,4 +31,6 @@ object AppImageIcons {
   val GptApi = R.drawable.gpt_api_logo
   val NeuroApi = R.drawable.neuro_api_logo
   val Key = R.drawable.key
+  val Visible = R.drawable.visible
+  val Invisible = R.drawable.invisible
 }

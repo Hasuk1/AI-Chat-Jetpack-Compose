@@ -22,5 +22,4 @@ object AppIcons {
   val Person = Icons.Rounded.Person
   val Search = Icons.Rounded.Search
   val Settings = Icons.Rounded.Settings
-  val Rating = Icons.Rounded.Star
 }
