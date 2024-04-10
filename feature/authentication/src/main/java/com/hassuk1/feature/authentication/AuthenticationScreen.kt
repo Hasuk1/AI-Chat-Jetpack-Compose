@@ -2,7 +2,6 @@ package com.hassuk1.feature.authentication
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,22 +9,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text2.BasicTextField2
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -41,17 +40,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,16 +58,14 @@ import com.hassuk1.core.model.ApiConfig
 
 const val GIT_LINK = "https://github.com/Hasuk1"
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AuthenticationScreen(
   viewModel: AuthenticationViewModel = hiltViewModel(), goChat: () -> Unit
 ) {
   val context = LocalContext.current
   val state by viewModel.state.collectAsState()
-  var inputUserKeyText by remember { mutableStateOf("") }
-  val focusManager = LocalFocusManager.current
-  val focusRequester = remember { FocusRequester() }
+  var hideKeyboard by remember { mutableStateOf(false) }
+
   AIChatTheme {
     Column(
       modifier = Modifier
@@ -138,29 +131,28 @@ fun AuthenticationScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        BasicTextField(
-          value = inputUserKeyText,
-          onValueChange = { inputUserKeyText = it },
+        InputUserKeyBar(
+          state = state,
+          hint = "ApiKey",
+          hideKeyboard = hideKeyboard,
+          onFocusClear = { hideKeyboard = false },
+          onDone = { viewModel.updateEnteredKey(it) })
+        Button(
+          onClick = { viewModel.saveUserData() },
           modifier = Modifier
-            .padding(20.dp)
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(
-              color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(20.dp)
-            )
-            .focusRequester(focusRequester),
-          keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-          keyboardActions = KeyboardActions(onSearch = {
-            focusManager.clearFocus()
-          }),
-        )
-        TextButton(onClick = goChat) {
-          Text("Go next screen")
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth(0.95f)
+            .height(50.dp),
+          shape = RoundedCornerShape(20.dp),
+          colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+          )
+        ) {
+          Text(text = "Save", fontSize = 20.sp)
         }
-        TextButton(onClick = {
-          viewModel.testDB()
-        }) {
-          Text("Test DB")
+        TextButton(onClick = goChat) {
+          Text("Read more about OpenAI apikey")
         }
       }
       Row(
@@ -228,43 +220,71 @@ fun InfoAlertDialog(
 
 @Composable
 fun InputUserKeyBar(
-  modifier: Modifier = Modifier,
+  state: AuthenticationScreenState,
   hint: String = "",
   hideKeyboard: Boolean = false,
   onFocusClear: () -> Unit = {},
   onDone: (String) -> Unit = {}
 ) {
-  var text by remember {
-    mutableStateOf("")
-  }
-  var isHintDisplayed by remember {
-    mutableStateOf(false)
-  }
-  val focusManager = LocalFocusManager.current
 
-  BasicTextField(value = text,
-    onValueChange = {
-      text = it
-      onDone(it)
-    },
-    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-    keyboardActions = KeyboardActions(onDone = {
-      focusManager.clearFocus()
-      onDone(text)
-    }),
-    singleLine = true,
-    textStyle = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
-    modifier = modifier)
-  if (isHintDisplayed) {
-    Text(
-      text = hint,
-      color = MaterialTheme.colorScheme.secondary,
-      modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
+  var isHintDisplayed by remember { mutableStateOf(false) }
+  val focusManager = LocalFocusManager.current
+  Row(
+    modifier = Modifier
+      .padding(20.dp)
+      .fillMaxWidth(0.95f)
+      .height(50.dp)
+      .background(
+        color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(20.dp)
+      ), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start
+  ) {
+    Image(
+      painter = rememberAsyncImagePainter(model = AppImageIcons.Key),
+      modifier = Modifier
+        .padding(start = 15.dp, end = 5.dp)
+        .height(20.dp),
+      contentDescription = "gpt_logo",
+      colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
     )
+    BasicTextField(value = state.userEnteredKey,
+      onValueChange = {
+        if (it.length <= 51) {
+          onDone(it)
+        }
+      },
+      modifier = Modifier
+        .padding(end = 15.dp)
+        .fillMaxSize()
+        .wrapContentHeight(align = Alignment.CenterVertically)
+        .onFocusChanged {
+          isHintDisplayed = !it.hasFocus
+        },
+      keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+      keyboardActions = KeyboardActions(onDone = {
+        focusManager.clearFocus()
+        onDone(state.userEnteredKey)
+      }),
+      singleLine = true,
+      textStyle = TextStyle(
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        fontSize = 20.sp,
+        textAlign = TextAlign.Start
+      ),
+      decorationBox = { innerTextField ->
+        Row {
+          if (isHintDisplayed && state.userEnteredKey.isEmpty()) {
+            Text(
+              text = hint,
+              fontSize = 15.sp,
+              color = MaterialTheme.colorScheme.secondary,
+            )
+          }
+        }
+        innerTextField()
+      })
   }
   if (hideKeyboard) {
     focusManager.clearFocus()
-    // Call onFocusClear to reset hideKeyboard state to false
     onFocusClear()
   }
 }
