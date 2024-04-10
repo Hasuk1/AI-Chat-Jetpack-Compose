@@ -45,34 +45,34 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
   val state = _state.asStateFlow()
 
   init {
-    testDB()
+    getUserData()
   }
 
   fun updateSelectedApi(newApi: ApiConfig) {
     viewModelScope.launch {
       _state.value = _state.value.copy(userSelectedApi = newApi)
-      val id = userRepository.saveUserData(
-        UserDataTable(
-          id = 1, selectedApiUrl = _state.value.userSelectedApi.baseUrl, userKey = _state.value.userEnteredKey
-        )
-      )
-      Log.d("MyLog", "new insert id=$id")
     }
   }
 
-  fun updateEnteredKey(newKey:String){
+  fun updateEnteredKey(newKey: String) {
     viewModelScope.launch {
       _state.value = _state.value.copy(userEnteredKey = newKey)
-      val id = userRepository.saveUserData(
-        UserDataTable(
-          id = 1, selectedApiUrl = _state.value.userSelectedApi.baseUrl, userKey = _state.value.userEnteredKey
-        )
-      )
-      Log.d("MyLog", "new insert id=$id")
     }
   }
 
-  fun testDB() {
+  fun saveUserData() {
+    viewModelScope.launch {
+      userRepository.saveUserData(
+        UserDataTable(
+          id = 1,
+          selectedApiUrl = _state.value.userSelectedApi.baseUrl,
+          userKey = _state.value.userEnteredKey
+        )
+      )
+    }
+  }
+
+  private fun getUserData() {
     viewModelScope.launch {
       userRepository.getUserData().collect { userData ->
         Log.d("MyLog", "Api=$userData")
