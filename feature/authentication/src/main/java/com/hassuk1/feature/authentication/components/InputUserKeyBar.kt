@@ -1,5 +1,6 @@
 package com.hassuk1.feature.authentication.components
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,6 +33,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +57,7 @@ fun InputUserKeyBar(
 ) {
   var isHintDisplayed by remember { mutableStateOf(false) }
   var isKeyVisible by remember { mutableStateOf(false) }
+  val context = LocalContext.current
   val focusManager = LocalFocusManager.current
   val clipboardManager: ClipboardManager = LocalClipboardManager.current
   Row(
@@ -114,8 +117,8 @@ fun InputUserKeyBar(
     Image(
       painter = rememberAsyncImagePainter(model = if (isKeyVisible) AppImageIcons.Visible else AppImageIcons.Invisible),
       modifier = Modifier
-        .clip(RoundedCornerShape(10.dp))
         .padding(start = 5.dp)
+        .clip(RoundedCornerShape(10.dp))
         .size(25.dp)
         .clickable { isKeyVisible = !isKeyVisible },
       contentDescription = "visible_pswd_logo",
@@ -126,11 +129,14 @@ fun InputUserKeyBar(
         .fillMaxHeight(0.65f)
         .padding(start = 5.dp, end = 10.dp)
         .width(60.dp)
-        .clip(RoundedCornerShape(15.dp))
+        .clip(RoundedCornerShape(10.dp))
         .background(color = MaterialTheme.colorScheme.secondary)
         .clickable {
           clipboardManager.getText()?.text?.let {
             onDone(it)
+            Toast.makeText(
+              context, "Pasted from your clipboard", Toast.LENGTH_SHORT
+            ).show()
           }
         }, contentAlignment = Alignment.Center
     ) {

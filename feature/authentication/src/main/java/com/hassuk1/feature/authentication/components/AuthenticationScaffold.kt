@@ -20,6 +20,7 @@ import com.hassuk1.core.designsystem.theme.AIChatTheme
 
 @Composable
 fun AuthenticationScaffold(
+  edgeToEdgeEnable: Boolean = true,
   topBar: @Composable () -> Unit = {},
   innerPadding: @Composable () -> Unit = {},
   changeFocus: () -> Unit = {},
@@ -39,10 +40,10 @@ fun AuthenticationScaffold(
       Box(
         modifier = Modifier
           .fillMaxWidth()
-          .height(90.dp)
+          .height(if (edgeToEdgeEnable) 90.dp else 40.dp)
           .background(color = MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.BottomStart
-      ){
+      ) {
         topBar()
       }
       Column(
@@ -51,7 +52,7 @@ fun AuthenticationScaffold(
           .weight(1f),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-      ){
+      ) {
         innerPadding()
       }
       Row(
@@ -60,7 +61,7 @@ fun AuthenticationScaffold(
           .height(60.dp)
           .background(color = MaterialTheme.colorScheme.primaryContainer),
         verticalAlignment = Alignment.CenterVertically,
-      ){
+      ) {
         bottomBar()
       }
     }
