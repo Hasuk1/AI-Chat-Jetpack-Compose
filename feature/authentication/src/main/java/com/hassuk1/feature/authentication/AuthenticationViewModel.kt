@@ -30,11 +30,11 @@ import androidx.lifecycle.viewModelScope
 import com.hassuk1.core.data.repository.UserDataRepository
 import com.hassuk1.core.database.UserDataTable
 import com.hassuk1.core.model.ApiConfig
-import com.hassuk1.core.model.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,6 +43,8 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
   ViewModel() {
   private val _state = MutableStateFlow(AuthenticationScreenState())
   val state = _state.asStateFlow()
+  private val _isUserDataValid = Channel<Boolean>()
+  val isUserDataValid = _isUserDataValid.receiveAsFlow()
 
   init {
     getUserData()
@@ -62,13 +64,15 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
 
   fun saveUserData() {
     viewModelScope.launch {
-      userRepository.saveUserData(
-        UserDataTable(
-          id = 1,
-          selectedApiUrl = _state.value.userSelectedApi.baseUrl,
-          userKey = _state.value.userEnteredKey
+      if (isUserDataValid()) {
+        userRepository.saveUserData(
+          UserDataTable(
+            id = 1,
+            selectedApiUrl = _state.value.userSelectedApi.baseUrl,
+            userKey = _state.value.userEnteredKey
+          )
         )
-      )
+      }
     }
   }
 
@@ -76,13 +80,24 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
     viewModelScope.launch {
       userRepository.getUserData().collect { userData ->
         Log.d("MyLog", "Api=$userData")
-        if (userData != null) {
+        userData?.let {
           _state.value = _state.value.copy(
             userEnteredKey = userData.userKey,
             userSelectedApi = if (userData.selectedApiUrl == ApiConfig.NEURO.baseUrl) ApiConfig.NEURO else ApiConfig.OPENAI
           )
         }
       }
+    }
+  }
+
+  private suspend fun isUserDataValid(): Boolean {
+    val userEnteredKey = _state.value.userEnteredKey
+    return if (userEnteredKey.isNotEmpty() && userEnteredKey[2] == '-' && userEnteredKey.length == 51) {
+      _isUserDataValid.send(true)
+      true
+    } else {
+      _isUserDataValid.send(false)
+      false
     }
   }
 }
