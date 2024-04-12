@@ -2,6 +2,7 @@ package com.hassuk1.feature.authentication
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +45,7 @@ import com.hassuk1.core.model.ApiConfig
 import com.hassuk1.feature.authentication.components.AuthenticationScaffold
 import com.hassuk1.feature.authentication.components.InfoAlertDialog
 import com.hassuk1.feature.authentication.components.InputUserKeyBar
+import kotlinx.coroutines.flow.collectLatest
 
 const val GIT_LINK = "https://github.com/Hasuk1/AI-Chat-Jetpack-Compose"
 
@@ -56,6 +59,17 @@ fun AuthenticationScreen(
   var isAlertDialogOpen by remember { mutableStateOf(false) }
   val activateButtonColorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
   val unActivateButtonColorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+
+  LaunchedEffect(key1 = viewModel.isUserDataValid) {
+    viewModel.isUserDataValid.collectLatest { isValid ->
+      if (isValid) {
+        Toast.makeText(
+          context, "Invalid Api Key", Toast.LENGTH_SHORT
+        ).show()
+      }
+    }
+  }
+
   AuthenticationScaffold(topBar = {
     Row(
       modifier = Modifier
@@ -107,7 +121,10 @@ fun AuthenticationScreen(
       onFocusClear = { hideKeyboard = false },
       onDone = { viewModel.updateEnteredKey(it) })
     Button(
-      onClick = { viewModel.saveUserData() },
+      onClick = {
+        viewModel.saveUserData()
+        hideKeyboard = !hideKeyboard
+      },
       modifier = Modifier
         .padding(horizontal = 20.dp)
         .fillMaxWidth(0.95f)
