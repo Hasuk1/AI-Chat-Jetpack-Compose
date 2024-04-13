@@ -62,7 +62,7 @@ fun AuthenticationScreen(
 
   LaunchedEffect(key1 = viewModel.isUserDataValid) {
     viewModel.isUserDataValid.collectLatest { isValid ->
-      if (isValid) {
+      if (!isValid) {
         Toast.makeText(
           context, "Invalid Api Key", Toast.LENGTH_SHORT
         ).show()
