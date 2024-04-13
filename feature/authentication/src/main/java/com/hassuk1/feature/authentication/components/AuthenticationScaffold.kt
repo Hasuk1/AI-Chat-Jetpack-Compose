@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -20,7 +21,6 @@ import com.hassuk1.core.designsystem.theme.AIChatTheme
 
 @Composable
 fun AuthenticationScaffold(
-  edgeToEdgeEnable: Boolean = false,
   topBar: @Composable () -> Unit = {},
   innerPadding: @Composable () -> Unit = {},
   changeFocus: () -> Unit = {},
@@ -38,9 +38,9 @@ fun AuthenticationScaffold(
         )
     ) {
       Box(
-        modifier = Modifier
+        modifier = Modifier.systemBarsPadding()
           .fillMaxWidth()
-          .height(if (edgeToEdgeEnable) 90.dp else 40.dp)
+          .height(40.dp)
           .background(color = MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.BottomStart
       ) {

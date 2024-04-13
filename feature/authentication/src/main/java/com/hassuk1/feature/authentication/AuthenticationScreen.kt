@@ -99,7 +99,10 @@ fun AuthenticationScreen(
       horizontalArrangement = Arrangement.End
     ) {
       IconButton(
-        onClick = { isAlertDialogOpen = true }, colors = IconButtonDefaults.iconButtonColors(
+        onClick = {
+//          isAlertDialogOpen = true
+          viewModel.test()
+        }, colors = IconButtonDefaults.iconButtonColors(
           contentColor = MaterialTheme.colorScheme.primary
         )
       ) {
