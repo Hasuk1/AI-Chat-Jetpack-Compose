@@ -20,7 +20,7 @@ import com.hassuk1.core.designsystem.theme.AIChatTheme
 
 @Composable
 fun AuthenticationScaffold(
-  edgeToEdgeEnable: Boolean = true,
+  edgeToEdgeEnable: Boolean = false,
   topBar: @Composable () -> Unit = {},
   innerPadding: @Composable () -> Unit = {},
   changeFocus: () -> Unit = {},

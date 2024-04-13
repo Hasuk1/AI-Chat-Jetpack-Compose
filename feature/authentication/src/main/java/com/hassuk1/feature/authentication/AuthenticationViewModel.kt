@@ -92,7 +92,7 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
 
   private suspend fun isUserDataValid(): Boolean {
     val userEnteredKey = _state.value.userEnteredKey
-    return if (userEnteredKey.isNotEmpty() && userEnteredKey[2] == '-' && userEnteredKey.length == 51) {
+    return if (userEnteredKey.isNotEmpty() && userEnteredKey.length == 51 && userEnteredKey[2] == '-') {
       _isUserDataValid.send(true)
       true
     } else {
