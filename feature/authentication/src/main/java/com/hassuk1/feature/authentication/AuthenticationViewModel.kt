@@ -27,6 +27,9 @@ package com.hassuk1.feature.authentication
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.common.Resource
+import com.example.core.network.dto.ChatCompletionRequestDTO
+import com.example.core.network.dto.model.Message
 import com.hassuk1.core.data.repository.UserDataRepository
 import com.hassuk1.core.database.UserDataTable
 import com.hassuk1.core.model.ApiConfig
@@ -34,6 +37,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -72,6 +76,24 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
             userKey = _state.value.userEnteredKey
           )
         )
+        userRepository.checkUserDataWithApi(
+          selectedApiUrl = _state.value.userSelectedApi.baseUrl,
+          userKey = _state.value.userEnteredKey
+        ).collectLatest { resource ->
+          when (resource) {
+            is Resource.Success -> {
+              Log.d("MyLog", "Success model")
+            }
+
+            is Resource.Error -> {
+              Log.d("MyLog", "Error model ${resource.message}")
+            }
+
+            is Resource.Loading -> {
+              Log.d("MyLog", "Loading model")
+            }
+          }
+        }
       }
     }
   }
@@ -98,6 +120,34 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
     } else {
       _isUserDataValid.send(false)
       false
+    }
+  }
+
+  fun test() {
+    viewModelScope.launch {
+      userRepository.test(
+        requestDTO = ChatCompletionRequestDTO(
+          messages = listOf(
+            Message(
+              content = "Say this is a test", role = "user"
+            )
+          )
+        ), userKey = _state.value.userEnteredKey
+      ).collectLatest { resource ->
+        when (resource) {
+          is Resource.Success -> {
+            Log.d("MyLog", "Answer->${resource.data}")
+          }
+
+          is Resource.Error -> {
+            Log.d("MyLog", "Error->${resource.message}")
+          }
+
+          is Resource.Loading -> {
+            Log.d("MyLog", "Loading answer")
+          }
+        }
+      }
     }
   }
 }

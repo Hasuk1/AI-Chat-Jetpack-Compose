@@ -44,7 +44,13 @@ dependencies {
   kapt(libs.androidx.hilt.compiler)
   implementation(libs.androidx.hilt.navigation.compose)
 
+  implementation(libs.retrofit)
+  implementation(libs.converter.gson)
+  implementation(libs.okhttp)
+  implementation(libs.logging.interceptor)
+
   implementation(project(":core:database"))
+  api(project(":core:network"))
   implementation(project(":core:model"))
 
 }
