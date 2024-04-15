@@ -39,10 +39,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.example.core.common.Result
 import com.hassuk1.core.designsystem.icons.AppIcons
 import com.hassuk1.core.designsystem.icons.AppImageIcons
 import com.hassuk1.core.model.ApiConfig
 import com.hassuk1.feature.authentication.components.AuthenticationScaffold
+import com.hassuk1.feature.authentication.components.ConnectAlertDialog
+import com.hassuk1.feature.authentication.components.DotsTyping
 import com.hassuk1.feature.authentication.components.InfoAlertDialog
 import com.hassuk1.feature.authentication.components.InputUserKeyBar
 import kotlinx.coroutines.flow.collectLatest
@@ -100,7 +103,7 @@ fun AuthenticationScreen(
     ) {
       IconButton(
         onClick = {
-//          isAlertDialogOpen = true
+          isAlertDialogOpen = true
           viewModel.test()
         }, colors = IconButtonDefaults.iconButtonColors(
           contentColor = MaterialTheme.colorScheme.primary
@@ -149,6 +152,7 @@ fun AuthenticationScreen(
     }) {
       Text("Read more about ${state.userSelectedApi.apiName} apikey", fontSize = 16.sp)
     }
+
   }, changeFocus = {
     hideKeyboard = !hideKeyboard
   }, bottomBar = {

@@ -28,6 +28,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.common.Resource
+import com.example.core.common.Result
 import com.example.core.network.dto.ChatCompletionRequestDTO
 import com.example.core.network.dto.model.Message
 import com.hassuk1.core.data.repository.UserDataRepository
@@ -82,14 +83,19 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
         ).collectLatest { resource ->
           when (resource) {
             is Resource.Success -> {
+              _state.value = _state.value.copy(connectedToApiStatus = Result.SUCCESS)
+              _isUserDataValid.send(true)
               Log.d("MyLog", "Success model ${resource.data}")
             }
 
             is Resource.Error -> {
+              _state.value = _state.value.copy(connectedToApiStatus = Result.ERROR)
+              _isUserDataValid.send(false)
               Log.d("MyLog", "Error model ${resource.message}")
             }
 
             is Resource.Loading -> {
+              _state.value = _state.value.copy(connectedToApiStatus = Result.LOADING)
               Log.d("MyLog", "Loading model")
             }
           }
