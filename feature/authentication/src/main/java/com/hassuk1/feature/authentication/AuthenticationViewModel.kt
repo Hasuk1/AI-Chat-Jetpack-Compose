@@ -36,6 +36,7 @@ import com.hassuk1.core.database.UserDataTable
 import com.hassuk1.core.model.ApiConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -67,9 +68,10 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
     }
   }
 
-  fun saveUserData() {
+  fun saveUserDataAndConnect(openDialog: () -> Unit = {}, closeDialog: () -> Unit = {}, connectedAction: () -> Unit = {}) {
     viewModelScope.launch {
       if (isUserDataValid()) {
+        openDialog()
         userRepository.saveUserData(
           UserDataTable(
             id = 1,
@@ -86,6 +88,10 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
               _state.value = _state.value.copy(connectedToApiStatus = Result.SUCCESS)
               _isUserDataValid.send(true)
               Log.d("MyLog", "Success model ${resource.data}")
+              delay(250)
+              closeDialog()
+              delay(50)
+              connectedAction()
             }
 
             is Resource.Error -> {

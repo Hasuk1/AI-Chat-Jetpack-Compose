@@ -33,24 +33,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import com.example.core.common.Result
+import com.example.core.common.AppConstants
 import com.hassuk1.core.designsystem.icons.AppIcons
 import com.hassuk1.core.designsystem.icons.AppImageIcons
 import com.hassuk1.core.model.ApiConfig
 import com.hassuk1.feature.authentication.components.AuthenticationScaffold
-import com.hassuk1.feature.authentication.components.ConnectAlertDialog
-import com.hassuk1.feature.authentication.components.DotsTyping
+import com.hassuk1.feature.authentication.components.ConnectDialog
 import com.hassuk1.feature.authentication.components.InfoAlertDialog
 import com.hassuk1.feature.authentication.components.InputUserKeyBar
 import kotlinx.coroutines.flow.collectLatest
-
-const val GIT_LINK = "https://github.com/Hasuk1/AI-Chat-Jetpack-Compose"
 
 @Composable
 fun AuthenticationScreen(
@@ -60,8 +56,9 @@ fun AuthenticationScreen(
   val state by viewModel.state.collectAsState()
   var hideKeyboard by remember { mutableStateOf(false) }
   var isAlertDialogOpen by remember { mutableStateOf(false) }
-  val activateButtonColorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
-  val unActivateButtonColorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+  var isConnectDialogOpen by remember { mutableStateOf(false) }
+  val activeApiButtonColor = MaterialTheme.colorScheme.primary
+  val inactiveApiButtonColor = MaterialTheme.colorScheme.secondary
 
   LaunchedEffect(key1 = viewModel.isUserDataValid) {
     viewModel.isUserDataValid.collectLatest { isValid ->
@@ -89,7 +86,7 @@ fun AuthenticationScreen(
           .clickable {
             context.startActivity(
               Intent(
-                Intent.ACTION_VIEW, Uri.parse(GIT_LINK)
+                Intent.ACTION_VIEW, Uri.parse(AppConstants.GIT_LINK)
               )
             )
           })
@@ -128,8 +125,12 @@ fun AuthenticationScreen(
       onDone = { viewModel.updateEnteredKey(it) })
     Button(
       onClick = {
-        viewModel.saveUserData()
         hideKeyboard = !hideKeyboard
+        viewModel.saveUserDataAndConnect(
+          openDialog = { isConnectDialogOpen = true },
+          closeDialog = { isConnectDialogOpen = false },
+          connectedAction = goChat
+          )
       },
       modifier = Modifier
         .padding(horizontal = 20.dp)
@@ -152,6 +153,11 @@ fun AuthenticationScreen(
     }) {
       Text("Read more about ${state.userSelectedApi.apiName} apikey", fontSize = 16.sp)
     }
+    if (isConnectDialogOpen) {
+      ConnectDialog(state) {
+        isConnectDialogOpen = false
+      }
+    }
 
   }, changeFocus = {
     hideKeyboard = !hideKeyboard
@@ -164,11 +170,11 @@ fun AuthenticationScreen(
         .clickable {
           viewModel.updateSelectedApi(ApiConfig.NEURO)
         }) {
-      Image(
+      Icon(
         painter = rememberAsyncImagePainter(model = AppImageIcons.NeuroApi),
-        modifier = Modifier.fillMaxSize(0.5f),
         contentDescription = "neuro_logo",
-        colorFilter = if (state.userSelectedApi == ApiConfig.NEURO) activateButtonColorFilter else unActivateButtonColorFilter
+        modifier = Modifier.fillMaxSize(0.5f),
+        tint = if (state.userSelectedApi == ApiConfig.NEURO) activeApiButtonColor else inactiveApiButtonColor
       )
     }
     Box(contentAlignment = Alignment.Center,
@@ -178,11 +184,11 @@ fun AuthenticationScreen(
         .clickable {
           viewModel.updateSelectedApi(ApiConfig.OPENAI)
         }) {
-      Image(
+      Icon(
         painter = rememberAsyncImagePainter(model = AppImageIcons.GptApi),
-        modifier = Modifier.fillMaxSize(0.5f),
         contentDescription = "gpt_logo",
-        colorFilter = if (state.userSelectedApi == ApiConfig.OPENAI) activateButtonColorFilter else unActivateButtonColorFilter
+        modifier = Modifier.fillMaxSize(0.5f),
+        tint = if (state.userSelectedApi == ApiConfig.OPENAI) activeApiButtonColor else inactiveApiButtonColor
       )
     }
   })
