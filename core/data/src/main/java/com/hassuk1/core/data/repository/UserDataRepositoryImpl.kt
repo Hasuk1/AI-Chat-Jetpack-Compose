@@ -8,6 +8,7 @@ import com.example.core.network.dto.ChatCompletionResponseDTO
 import com.example.core.network.remote.ModelResponse
 import com.hassuk1.core.database.UserDataDao
 import com.hassuk1.core.database.UserDataTable
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -54,7 +55,7 @@ class UserDataRepositoryImpl @Inject constructor(
     }
   }
 
-  override suspend fun test(
+  override suspend fun getCompletionToPromt(
     requestDTO: ChatCompletionRequestDTO, userKey: String
   ): Flow<Resource<ChatCompletionResponseDTO>> {
     return flow {

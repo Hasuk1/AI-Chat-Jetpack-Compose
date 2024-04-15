@@ -77,6 +77,7 @@ dependencies {
   debugImplementation(libs.androidx.ui.test.manifest)
 
   implementation(project(":feature:authentication"))
+  implementation(project(":feature:chat"))
 }
 
 kapt {

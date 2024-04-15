@@ -28,6 +28,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.common.Resource
+import com.example.core.common.Result
 import com.example.core.network.dto.ChatCompletionRequestDTO
 import com.example.core.network.dto.model.Message
 import com.hassuk1.core.data.repository.UserDataRepository
@@ -35,6 +36,7 @@ import com.hassuk1.core.database.UserDataTable
 import com.hassuk1.core.model.ApiConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -66,9 +68,10 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
     }
   }
 
-  fun saveUserData() {
+  fun saveUserDataAndConnect(openDialog: () -> Unit = {}, closeDialog: () -> Unit = {}, connectedAction: () -> Unit = {}) {
     viewModelScope.launch {
       if (isUserDataValid()) {
+        openDialog()
         userRepository.saveUserData(
           UserDataTable(
             id = 1,
@@ -82,14 +85,23 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
         ).collectLatest { resource ->
           when (resource) {
             is Resource.Success -> {
-              Log.d("MyLog", "Success model")
+              _state.value = _state.value.copy(connectedToApiStatus = Result.SUCCESS)
+              _isUserDataValid.send(true)
+              Log.d("MyLog", "Success model ${resource.data}")
+              delay(250)
+              closeDialog()
+              delay(50)
+              connectedAction()
             }
 
             is Resource.Error -> {
+              _state.value = _state.value.copy(connectedToApiStatus = Result.ERROR)
+              _isUserDataValid.send(false)
               Log.d("MyLog", "Error model ${resource.message}")
             }
 
             is Resource.Loading -> {
+              _state.value = _state.value.copy(connectedToApiStatus = Result.LOADING)
               Log.d("MyLog", "Loading model")
             }
           }
@@ -125,7 +137,7 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
 
   fun test() {
     viewModelScope.launch {
-      userRepository.test(
+      userRepository.getCompletionToPromt(
         requestDTO = ChatCompletionRequestDTO(
           messages = listOf(
             Message(
