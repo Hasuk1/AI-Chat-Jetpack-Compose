@@ -82,7 +82,7 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
         ).collectLatest { resource ->
           when (resource) {
             is Resource.Success -> {
-              Log.d("MyLog", "Success model")
+              Log.d("MyLog", "Success model ${resource.data}")
             }
 
             is Resource.Error -> {
@@ -125,7 +125,7 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
 
   fun test() {
     viewModelScope.launch {
-      userRepository.test(
+      userRepository.getCompletionToPromt(
         requestDTO = ChatCompletionRequestDTO(
           messages = listOf(
             Message(

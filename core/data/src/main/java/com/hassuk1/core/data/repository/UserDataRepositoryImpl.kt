@@ -54,7 +54,7 @@ class UserDataRepositoryImpl @Inject constructor(
     }
   }
 
-  override suspend fun test(
+  override suspend fun getCompletionToPromt(
     requestDTO: ChatCompletionRequestDTO, userKey: String
   ): Flow<Resource<ChatCompletionResponseDTO>> {
     return flow {
