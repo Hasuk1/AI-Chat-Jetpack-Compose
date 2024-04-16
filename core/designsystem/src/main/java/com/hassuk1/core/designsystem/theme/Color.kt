@@ -1,4 +1,5 @@
 package com.hassuk1.core.designsystem.theme
+
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF5D5791)

@@ -78,6 +78,7 @@ dependencies {
 
   implementation(project(":feature:authentication"))
   implementation(project(":feature:chat"))
+  implementation(project(":feature:chatlist"))
 }
 
 kapt {

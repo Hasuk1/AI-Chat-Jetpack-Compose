@@ -134,9 +134,11 @@ fun InputUserKeyBar(
         .clickable {
           clipboardManager.getText()?.text?.let {
             onDone(it)
-            Toast.makeText(
-              context, "Pasted from your clipboard", Toast.LENGTH_SHORT
-            ).show()
+            Toast
+              .makeText(
+                context, "Pasted from your clipboard", Toast.LENGTH_SHORT
+              )
+              .show()
           }
         }, contentAlignment = Alignment.Center
     ) {

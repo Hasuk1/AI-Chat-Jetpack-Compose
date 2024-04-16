@@ -28,32 +28,35 @@ fun AuthenticationScaffold(
 ) {
   AIChatTheme {
     Column(
-      modifier = Modifier
-        .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.background)
-        .clickable(
-          interactionSource = remember { MutableInteractionSource() },
-          indication = null,
-          onClick = changeFocus
-        )
+      modifier = Modifier.fillMaxSize()
     ) {
-      Box(
-        modifier = Modifier.systemBarsPadding()
-          .fillMaxWidth()
-          .height(40.dp)
-          .background(color = MaterialTheme.colorScheme.primaryContainer),
-        contentAlignment = Alignment.BottomStart
-      ) {
-        topBar()
-      }
       Column(
         modifier = Modifier
           .fillMaxWidth()
-          .weight(1f),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+          .weight(1f)
+          .background(color = MaterialTheme.colorScheme.background)
+          .systemBarsPadding()
+          .clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null,
+            onClick = changeFocus
+          )
       ) {
-        innerPadding()
+        Box(
+          modifier = Modifier
+            .background(color = MaterialTheme.colorScheme.primaryContainer)
+            .fillMaxWidth()
+            .height(40.dp), contentAlignment = Alignment.BottomStart
+        ) {
+          topBar()
+        }
+        Column(
+          modifier = Modifier.fillMaxSize(),
+          verticalArrangement = Arrangement.Center,
+          horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          innerPadding()
+        }
       }
       Row(
         modifier = Modifier
