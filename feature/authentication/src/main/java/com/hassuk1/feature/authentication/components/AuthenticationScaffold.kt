@@ -7,10 +7,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -28,35 +33,36 @@ fun AuthenticationScaffold(
 ) {
   AIChatTheme {
     Column(
-      modifier = Modifier.fillMaxSize()
+      modifier = Modifier
+        .fillMaxSize()
+        .background(color = MaterialTheme.colorScheme.background)
+        .clickable(
+          interactionSource = remember { MutableInteractionSource() },
+          indication = null,
+          onClick = changeFocus
+        )
     ) {
+      Box(
+        modifier = Modifier
+          .background(color = MaterialTheme.colorScheme.primaryContainer)
+          .padding(
+            WindowInsets.systemBars
+              .only(WindowInsetsSides.Top)
+              .asPaddingValues()
+          )
+          .fillMaxWidth()
+          .height(40.dp), contentAlignment = Alignment.BottomStart
+      ) {
+        topBar()
+      }
       Column(
         modifier = Modifier
-          .fillMaxWidth()
-          .weight(1f)
-          .background(color = MaterialTheme.colorScheme.background)
-          .systemBarsPadding()
-          .clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null,
-            onClick = changeFocus
-          )
+          .fillMaxSize()
+          .weight(1f),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        Box(
-          modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.primaryContainer)
-            .fillMaxWidth()
-            .height(40.dp), contentAlignment = Alignment.BottomStart
-        ) {
-          topBar()
-        }
-        Column(
-          modifier = Modifier.fillMaxSize(),
-          verticalArrangement = Arrangement.Center,
-          horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-          innerPadding()
-        }
+        innerPadding()
       }
       Row(
         modifier = Modifier
@@ -68,6 +74,8 @@ fun AuthenticationScaffold(
         bottomBar()
       }
     }
+
   }
+
 }
 

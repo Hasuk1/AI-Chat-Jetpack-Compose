@@ -26,7 +26,7 @@ const val GIT_LINK = "https://github.com/Hasuk1"
 @Composable
 fun ChatScreen(
   viewModel: ChatViewModel = hiltViewModel(),
-  goChat:() -> Unit
+  goChat: () -> Unit
 ) {
   val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
   val scale by infiniteTransition.animateFloat(
@@ -35,11 +35,15 @@ fun ChatScreen(
     animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse),
     label = "scale"
   )
-  Box(modifier = Modifier.fillMaxSize().clickable(
-    interactionSource = remember { MutableInteractionSource() },
-    indication = null,
-    onClick = goChat
-  )) {
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .clickable(
+        interactionSource = remember { MutableInteractionSource() },
+        indication = null,
+        onClick = goChat
+      )
+  ) {
     Text(
       text = "Hello",
       modifier = Modifier

@@ -13,7 +13,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.feature.chatlist.ChatListScreen
 import com.hassuk1.feature.authentication.AuthenticationScreen
-import com.hassuk1.feature.authentication.ChatScreen
 
 @Composable
 fun AIChatNavHost(navController: NavHostController, startRoute: String) {
