@@ -27,6 +27,7 @@ package com.hassuk1.feature.authentication
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.common.ErrorType
 import com.example.core.common.Resource
 import com.example.core.common.Result
 import com.example.core.network.dto.ChatCompletionRequestDTO
@@ -49,8 +50,8 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
   ViewModel() {
   private val _state = MutableStateFlow(AuthenticationScreenState())
   val state = _state.asStateFlow()
-  private val _isUserDataValid = Channel<Boolean>()
-  val isUserDataValid = _isUserDataValid.receiveAsFlow()
+  private val _errorType = Channel<ErrorType>()
+  val errorType = _errorType.receiveAsFlow()
 
   init {
     getUserData()
@@ -68,17 +69,14 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
     }
   }
 
-  fun saveUserDataAndConnect(openDialog: () -> Unit = {}, closeDialog: () -> Unit = {}, connectedAction: () -> Unit = {}) {
+  fun connectAndSaveUserData(
+    openDialog: () -> Unit = {},
+    closeDialog: () -> Unit = {},
+    connectedAction: () -> Unit = {}
+  ) {
     viewModelScope.launch {
       if (isUserDataValid()) {
         openDialog()
-        userRepository.saveUserData(
-          UserDataTable(
-            id = 1,
-            selectedApiUrl = _state.value.userSelectedApi.baseUrl,
-            userKey = _state.value.userEnteredKey
-          )
-        )
         userRepository.checkUserDataWithApi(
           selectedApiUrl = _state.value.userSelectedApi.baseUrl,
           userKey = _state.value.userEnteredKey
@@ -86,17 +84,18 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
           when (resource) {
             is Resource.Success -> {
               _state.value = _state.value.copy(connectedToApiStatus = Result.SUCCESS)
-              _isUserDataValid.send(true)
+              _errorType.send(ErrorType.NONE)
+              saveUserDate()
               Log.d("MyLog", "Success model ${resource.data}")
-              delay(250)
+              delay(400)
               closeDialog()
-              delay(50)
+              delay(100)
               connectedAction()
             }
 
             is Resource.Error -> {
               _state.value = _state.value.copy(connectedToApiStatus = Result.ERROR)
-              _isUserDataValid.send(false)
+              _errorType.send(ErrorType.CONNECTED_FAIL)
               Log.d("MyLog", "Error model ${resource.message}")
             }
 
@@ -108,6 +107,16 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
         }
       }
     }
+  }
+
+  private suspend fun saveUserDate() {
+    userRepository.saveUserData(
+      UserDataTable(
+        id = 1,
+        selectedApiUrl = _state.value.userSelectedApi.baseUrl,
+        userKey = _state.value.userEnteredKey
+      )
+    )
   }
 
   private fun getUserData() {
@@ -127,10 +136,10 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
   private suspend fun isUserDataValid(): Boolean {
     val userEnteredKey = _state.value.userEnteredKey
     return if (userEnteredKey.isNotEmpty() && userEnteredKey.length == 51 && userEnteredKey[2] == '-') {
-      _isUserDataValid.send(true)
+      _errorType.send(ErrorType.NONE)
       true
     } else {
-      _isUserDataValid.send(false)
+      _errorType.send(ErrorType.INCORRECT_API)
       false
     }
   }
@@ -163,4 +172,3 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
     }
   }
 }
-

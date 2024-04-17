@@ -11,43 +11,66 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.feature.chatlist.ChatListScreen
 import com.hassuk1.feature.authentication.AuthenticationScreen
-import com.hassuk1.feature.authentication.ChatScreen
 
 @Composable
 fun AIChatNavHost(navController: NavHostController, startRoute: String) {
   NavHost(navController = navController, startDestination = startRoute) {
     composable(AIChatAppScreens.AUTHSCREEN.route) {
-      AuthenticationScreen {
-        navController.navigate(AIChatAppScreens.CHATSCREEN.route) {
+      AuthenticationScreen(goChatList = {
+        navController.navigate(AIChatAppScreens.CHATLISTCREEN.route) {
           popUpTo(AIChatAppScreens.AUTHSCREEN.route) {
-            inclusive = true
+//            inclusive = true
           }
         }
-      }
+      })
 
     }
-    composable(AIChatAppScreens.CHATSCREEN.route,enterTransition = {
-            fadeIn(
-                animationSpec = tween(
-                    300, easing = LinearEasing
-                )
-            ) + slideIntoContainer(
-                animationSpec = tween(300, easing = EaseIn),
-                towards = AnimatedContentTransitionScope.SlideDirection.Start
-            )
-        },
-        exitTransition = {
-            fadeOut(
-                animationSpec = tween(
-                    300, easing = LinearEasing
-                )
-            ) + slideOutOfContainer(
-                animationSpec = tween(300, easing = EaseOut),
-                towards = AnimatedContentTransitionScope.SlideDirection.End
-            )
-        }) {
-      ChatScreen()
+//    composable(AIChatAppScreens.CHATCREEN.route, enterTransition = {
+//      fadeIn(
+//        animationSpec = tween(
+//          300, easing = LinearEasing
+//        )
+//      ) + slideIntoContainer(
+//        animationSpec = tween(300, easing = EaseIn),
+//        towards = AnimatedContentTransitionScope.SlideDirection.Start
+//      )
+//    }, exitTransition = {
+//      fadeOut(
+//        animationSpec = tween(
+//          300, easing = LinearEasing
+//        )
+//      ) + slideOutOfContainer(
+//        animationSpec = tween(300, easing = EaseOut),
+//        towards = AnimatedContentTransitionScope.SlideDirection.End
+//      )
+//    }) {
+//      ChatScreen {
+//        navController.navigate(AIChatAppScreens.CHATLISTCREEN.route)
+//      }
+//    }
+
+    composable(AIChatAppScreens.CHATLISTCREEN.route, enterTransition = {
+      fadeIn(
+        animationSpec = tween(
+          300, easing = LinearEasing
+        )
+      ) + slideIntoContainer(
+        animationSpec = tween(300, easing = EaseIn),
+        towards = AnimatedContentTransitionScope.SlideDirection.Start
+      )
+    }, exitTransition = {
+      fadeOut(
+        animationSpec = tween(
+          300, easing = LinearEasing
+        )
+      ) + slideOutOfContainer(
+        animationSpec = tween(300, easing = EaseOut),
+        towards = AnimatedContentTransitionScope.SlideDirection.End
+      )
+    }) {
+      ChatListScreen(navController = navController)
     }
   }
 }

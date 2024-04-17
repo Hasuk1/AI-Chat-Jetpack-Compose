@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.core.common.AppConstants
+import com.example.core.common.ErrorType
 import com.hassuk1.core.designsystem.icons.AppIcons
 import com.hassuk1.core.designsystem.icons.AppImageIcons
 import com.hassuk1.core.model.ApiConfig
@@ -50,7 +51,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AuthenticationScreen(
-  viewModel: AuthenticationViewModel = hiltViewModel(), goChat: () -> Unit
+  viewModel: AuthenticationViewModel = hiltViewModel(), goChatList: () -> Unit = {}
 ) {
   val context = LocalContext.current
   val state by viewModel.state.collectAsState()
@@ -60,11 +61,11 @@ fun AuthenticationScreen(
   val activeApiButtonColor = MaterialTheme.colorScheme.primary
   val inactiveApiButtonColor = MaterialTheme.colorScheme.secondary
 
-  LaunchedEffect(key1 = viewModel.isUserDataValid) {
-    viewModel.isUserDataValid.collectLatest { isValid ->
-      if (!isValid) {
+  LaunchedEffect(key1 = viewModel.errorType) {
+    viewModel.errorType.collectLatest { errorType ->
+      if (errorType != ErrorType.NONE) {
         Toast.makeText(
-          context, "Invalid Api Key", Toast.LENGTH_SHORT
+          context, errorType.message, Toast.LENGTH_SHORT
         ).show()
       }
     }
@@ -126,11 +127,11 @@ fun AuthenticationScreen(
     Button(
       onClick = {
         hideKeyboard = !hideKeyboard
-        viewModel.saveUserDataAndConnect(
+        viewModel.connectAndSaveUserData(
           openDialog = { isConnectDialogOpen = true },
           closeDialog = { isConnectDialogOpen = false },
-          connectedAction = goChat
-          )
+          connectedAction = goChatList
+        )
       },
       modifier = Modifier
         .padding(horizontal = 20.dp)

@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Search
@@ -22,4 +23,6 @@ object AppIcons {
   val Person = Icons.Rounded.Person
   val Search = Icons.Rounded.Search
   val Settings = Icons.Rounded.Settings
+  val Favorite = Icons.Rounded.Star
+  val Delete = Icons.Rounded.Delete
 }

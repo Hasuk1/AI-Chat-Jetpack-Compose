@@ -56,14 +56,14 @@ androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fr
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room_version"}
-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room_version"}
-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room_version"}
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room_version" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room_version" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room_version" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 dagerHiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroidCompiler" }
-room = { id = "androidx.room", version.ref = "room_version"}
+room = { id = "androidx.room", version.ref = "room_version" }
 jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }

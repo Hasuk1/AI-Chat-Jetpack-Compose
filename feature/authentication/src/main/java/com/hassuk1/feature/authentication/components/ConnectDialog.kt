@@ -47,7 +47,7 @@ fun ConnectDialog(
       ) {
         state.connectedToApiStatus?.let { res ->
           AnimatedContent(
-            res, label = ""
+            targetState = res, label = "Animated status"
           ) { targetState ->
             when (targetState) {
               Result.LOADING -> {
