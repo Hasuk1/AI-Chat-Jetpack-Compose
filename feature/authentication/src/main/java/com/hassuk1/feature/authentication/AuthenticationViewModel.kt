@@ -33,7 +33,7 @@ import com.example.core.common.Result
 import com.example.core.network.dto.ChatCompletionRequestDTO
 import com.example.core.network.dto.model.Message
 import com.hassuk1.core.data.repository.UserDataRepository
-import com.hassuk1.core.database.UserDataTable
+import com.hassuk1.core.database.model.UserData
 import com.hassuk1.core.model.ApiConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -111,7 +111,7 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
 
   private suspend fun saveUserDate() {
     userRepository.saveUserData(
-      UserDataTable(
+      UserData(
         id = 1,
         selectedApiUrl = _state.value.userSelectedApi.baseUrl,
         userKey = _state.value.userEnteredKey

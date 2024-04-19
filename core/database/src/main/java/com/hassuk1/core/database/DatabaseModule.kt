@@ -2,18 +2,17 @@ package com.hassuk1.core.database
 
 import android.content.Context
 import androidx.room.Room
+import com.hassuk1.core.database.dao.UserDataDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ViewModelScoped
 
 @InstallIn(ViewModelComponent::class)
 @Module
 object DatabaseModule {
   @Provides
-  @ViewModelScoped
   fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
     return Room.databaseBuilder(
       context.applicationContext,

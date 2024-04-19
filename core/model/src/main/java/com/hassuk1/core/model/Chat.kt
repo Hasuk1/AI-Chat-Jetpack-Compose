@@ -6,3 +6,9 @@ data class Chat(
   val firstPromt: String,
   val isRemoved: Boolean
 )
+
+/*data class Chat(
+  val chat: Any,
+  val description: String,
+  val isRemoved: Boolean
+)*/

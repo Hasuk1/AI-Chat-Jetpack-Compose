@@ -6,8 +6,8 @@ import com.example.core.network.BaseUrlInterceptor
 import com.example.core.network.dto.ChatCompletionRequestDTO
 import com.example.core.network.dto.ChatCompletionResponseDTO
 import com.example.core.network.remote.ModelResponse
-import com.hassuk1.core.database.UserDataDao
-import com.hassuk1.core.database.UserDataTable
+import com.hassuk1.core.database.dao.UserDataDao
+import com.hassuk1.core.database.model.UserData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -20,12 +20,12 @@ class UserDataRepositoryImpl @Inject constructor(
   private val api: AiChatApi,
   private val baseUrlInterceptor: BaseUrlInterceptor
 ) : UserDataRepository {
-  override suspend fun saveUserData(userData: UserDataTable): List<Long> {
+  override suspend fun saveUserData(userData: UserData): List<Long> {
     baseUrlInterceptor.setNewBaseUrl(userData.selectedApiUrl.toHttpUrl())
     return userDataDao.insertUserData(userData)
   }
 
-  override suspend fun getUserData(): Flow<UserDataTable?> {
+  override suspend fun getUserData(): Flow<UserData?> {
     return userDataDao.getUserData()
   }
 
