@@ -4,7 +4,7 @@ import com.example.core.network.AiChatApi
 import com.example.core.network.BaseUrlInterceptor
 import com.hassuk1.core.data.repository.UserDataRepository
 import com.hassuk1.core.data.repository.UserDataRepositoryImpl
-import com.hassuk1.core.database.UserDataDao
+import com.hassuk1.core.database.dao.UserDataDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

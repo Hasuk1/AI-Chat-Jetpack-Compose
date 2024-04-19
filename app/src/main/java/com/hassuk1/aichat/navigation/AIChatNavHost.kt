@@ -21,7 +21,7 @@ fun AIChatNavHost(navController: NavHostController, startRoute: String) {
       AuthenticationScreen(goChatList = {
         navController.navigate(AIChatAppScreens.CHATLISTCREEN.route) {
           popUpTo(AIChatAppScreens.AUTHSCREEN.route) {
-//            inclusive = true
+            inclusive = true
           }
         }
       })

@@ -98,7 +98,6 @@ fun ChatListScreen(
 
 @Composable
 fun ChatCard(chatInfo: Chat) {
-
   Row(modifier = Modifier
     .clickable { }
     .padding(horizontal = 10.dp)

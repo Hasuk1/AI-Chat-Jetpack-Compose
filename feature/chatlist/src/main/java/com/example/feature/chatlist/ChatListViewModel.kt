@@ -18,7 +18,10 @@ class ChatListViewModel @Inject constructor() : ViewModel() {
     val currentState = _state.value
     val newId = _x++
     val newChat = Chat(
-      id = newId, name = "Chat $newId", firstPromt = "Is sample promt from chat", isRemoved = false
+      id = newId,
+      name = "Chat $newId",
+      firstPromt = "Is sample promt from chat. Is sample promt from chat. Is sample promt from chat. Is sample promt from chat. Is sample promt from chat. Is sample promt from chat. Is sample promt from chat. Is sample promt from chat.",
+      isRemoved = false
     )
     _state.value = currentState.copy(
       chatList = currentState.chatList + newChat
@@ -42,8 +45,8 @@ class ChatListViewModel @Inject constructor() : ViewModel() {
 
   override fun onCleared() {
     Log.d("MyLog", "before item ${_state.value.chatList}")
-    val newList:MutableList<Chat> = mutableListOf()
-    _state.value.chatList.forEach{ chat ->
+    val newList: MutableList<Chat> = mutableListOf()
+    _state.value.chatList.forEach { chat ->
       if (!chat.isRemoved) newList.add(chat)
     }
     Log.d("MyLog", "Deleted item $newList")
