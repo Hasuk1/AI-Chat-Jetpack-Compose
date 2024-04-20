@@ -14,6 +14,12 @@ android {
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles("consumer-rules.pro")
+    javaCompileOptions {
+      annotationProcessorOptions {
+        arguments["room.schemaLocation"] =
+          "$projectDir/schemas"
+      }
+    }
   }
 
   buildTypes {
@@ -61,3 +67,4 @@ kapt {
   correctErrorTypes = true
   includeCompileClasspath = false
 }
+

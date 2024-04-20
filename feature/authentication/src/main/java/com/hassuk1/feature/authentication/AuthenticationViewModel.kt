@@ -36,6 +36,7 @@ import com.hassuk1.core.data.repository.UserDataRepository
 import com.hassuk1.core.database.model.UserData
 import com.hassuk1.core.model.ApiConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -120,9 +121,9 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
   }
 
   private fun getUserData() {
-    viewModelScope.launch {
+    viewModelScope.launch(Dispatchers.IO) {
       userRepository.getUserData().collect { userData ->
-        Log.d("MyLog", "Api=$userData")
+        Log.d("MyLog", "AuthenticationViewModel UserData=$userData")
         userData?.let {
           _state.value = _state.value.copy(
             userEnteredKey = userData.userKey,

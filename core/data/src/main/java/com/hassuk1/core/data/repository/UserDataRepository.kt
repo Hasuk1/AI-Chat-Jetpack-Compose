@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserDataRepository {
   suspend fun saveUserData(userData: UserData): List<Long>
   suspend fun getUserData(): Flow<UserData?>
+
   suspend fun checkUserDataWithApi(
     selectedApiUrl: String, userKey: String
   ): Flow<Resource<ModelResponse>>

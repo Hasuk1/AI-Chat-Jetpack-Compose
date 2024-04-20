@@ -2,54 +2,72 @@ package com.example.feature.chatlist
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.hassuk1.core.model.Chat
+import androidx.lifecycle.viewModelScope
+import com.hassuk1.core.data.repository.ChatsRepository
+import com.hassuk1.core.data.repository.UserDataRepository
+import com.hassuk1.core.database.model.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
-class ChatListViewModel @Inject constructor() : ViewModel() {
+class ChatListViewModel @Inject constructor(
+  private val chatsRepository: ChatsRepository,
+  private val userRepository: UserDataRepository
+) :
+  ViewModel() {
   private val _state = MutableStateFlow(ChatListScreenState())
   val state = _state.asStateFlow()
-  private var _x = 1
 
-  fun addNewChat() {
-    val currentState = _state.value
-    val newId = _x++
-    val newChat = Chat(
-      id = newId,
-      name = "Chat $newId",
-      firstPromt = "Is sample promt from chat. Is sample promt from chat. Is sample promt from chat. Is sample promt from chat. Is sample promt from chat. Is sample promt from chat. Is sample promt from chat. Is sample promt from chat.",
-      isRemoved = false
-    )
-    _state.value = currentState.copy(
-      chatList = currentState.chatList + newChat
-    )
-    Log.d("MyLog", "Added item ${_state.value}")
+  init {
+    getUserData()
   }
 
-  fun removeChat(chat: Chat) {
-    val currentState = _state.value
-    _state.value = currentState.copy(
-      chatList = currentState.chatList - chat
-    )
-    val removedChat = Chat(
-      id = chat.id, name = chat.name, firstPromt = chat.firstPromt, isRemoved = true
-    )
-    Log.d("MyLog", "Removed item $removedChat")
-    _state.value = currentState.copy(
-      chatList = currentState.chatList + removedChat
-    )
-  }
-
-  override fun onCleared() {
-    Log.d("MyLog", "before item ${_state.value.chatList}")
-    val newList: MutableList<Chat> = mutableListOf()
-    _state.value.chatList.forEach { chat ->
-      if (!chat.isRemoved) newList.add(chat)
+  fun addNewChat(name: String, description: String) {
+    viewModelScope.launch {
+      val id = chatsRepository.addNewChat(_state.value.userData.id, name, description)
+      Log.d("MyLog", "added new=$id")
     }
-    Log.d("MyLog", "Deleted item $newList")
-    super.onCleared()
   }
+
+  private fun getAllChats(userId: Long = _state.value.userData.id) {
+    Log.d("MyLog", "getAllChats userId=$userId")
+    viewModelScope.launch(Dispatchers.IO) {
+
+
+    }
+  }
+
+  private fun getUserData(): Long {
+    viewModelScope.launch(Dispatchers.IO) {
+      userRepository.getUserData().collect { userData ->
+        Log.d("MyLog", "ChatListViewModel UserData=$userData")
+        userData?.let {
+          _state.value = _state.value.copy(
+            userData = UserData(
+              id = it.id,
+              selectedApiUrl = it.selectedApiUrl,
+              userKey = it.userKey
+            )
+          )
+          getAllChats(userData.id)
+        }
+      }
+    }
+    return _state.value.userData.id
+  }
+
+  /*  override fun onCleared() {
+      Log.d("MyLog", "before item ${_state.value.chatList}")
+      val newList: MutableList<Chat> = mutableListOf()
+      _state.value.chatList.forEach { chat ->
+        if (!chat.isRemoved) newList.add(chat)
+      }
+      Log.d("MyLog", "Deleted item $newList")
+      super.onCleared()
+    }*/
 }

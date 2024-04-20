@@ -9,14 +9,14 @@ import java.util.Date
 
 @Entity(
   tableName = "messages", foreignKeys = [ForeignKey(
-    entity = Chats::class,
+    entity = Chat::class,
     parentColumns = ["id"],
     childColumns = ["chat_id"],
     onDelete = ForeignKey.CASCADE
   )]
   ,indices = [Index("chat_id")]
 )
-data class Messages(
+data class Message(
   @PrimaryKey(autoGenerate = true) val id: Long = 0,
   @ColumnInfo(name = "chat_id") val chatId: Long,
   @ColumnInfo(name = "assistant_message") val assistantMessage: String,

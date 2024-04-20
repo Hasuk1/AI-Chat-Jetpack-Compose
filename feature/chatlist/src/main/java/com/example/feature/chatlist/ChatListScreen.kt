@@ -34,12 +34,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,12 +50,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.feature.chatlist.components.ChatListScaffold
+import com.hassuk1.core.database.model.Chat
 import com.hassuk1.core.designsystem.icons.AppIcons
 import com.hassuk1.core.designsystem.icons.AppImageIcons
-import com.hassuk1.core.model.Chat
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 @Composable
 fun ChatListScreen(
@@ -65,6 +61,9 @@ fun ChatListScreen(
 ) {
   val state by viewModel.state.collectAsState()
   val lazyColumnState = rememberLazyListState()
+//  LaunchedEffect(Unit) {
+//    viewModel.getAllChats(state.userData.id)
+//  }
   ChatListScaffold(topBar = {
     IconButton(
       onClick = {}, colors = IconButtonDefaults.iconButtonColors(
@@ -74,20 +73,28 @@ fun ChatListScreen(
       Icon(AppIcons.Settings, contentDescription = "chat-list-settings")
     }
   }, innerPadding = {
-    LazyColumn(
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(vertical = 10.dp), state = lazyColumnState
-    ) {
+
+
+    // Отображение списка чатов
+    LazyColumn(state = lazyColumnState) {
       items(state.chatList) { chat ->
-        val  isRemoved = remember { mutableStateOf(chat.isRemoved) }
-        Test(chat,isRemoved) { viewModel.removeChat(chat) }
-//        ChatCard(chat, deleteChat = { viewModel.deleteChat(chat.id) })
+        ChatCard(chat)
       }
     }
+//    LazyColumn(
+//      modifier = Modifier
+//        .fillMaxSize()
+//        .padding(vertical = 10.dp), state = lazyColumnState
+//    ) {
+//      items(state.chatList) { chat ->
+////        val  isRemoved = remember { mutableStateOf(chat.isRemoved) }
+//        Test(chat) { /*viewModel.removeChat(chat)*/ }
+////        ChatCard(chat, deleteChat = { viewModel.deleteChat(chat.id) })
+//      }
+//    }
   }, floatingButton = {
     FloatingActionButton(onClick = {
-      viewModel.addNewChat()
+      viewModel.addNewChat("Chat","Is sample promt from chat")
     }, modifier = Modifier.padding(40.dp)) {
       Icon(
         AppIcons.Add, contentDescription = "Add new chat", tint = MaterialTheme.colorScheme.primary
@@ -132,7 +139,7 @@ fun ChatCard(chatInfo: Chat) {
         color = MaterialTheme.colorScheme.onBackground
       )
       Text(
-        text = chatInfo.firstPromt,
+        text = chatInfo.description,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         color = MaterialTheme.colorScheme.onBackground
@@ -144,19 +151,16 @@ fun ChatCard(chatInfo: Chat) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Test(chatInfo: Chat, isRemoved: MutableState<Boolean>, onRemove: () -> Unit) {
+fun Test(chatInfo: Chat/*, isRemoved: MutableState<Boolean>*/, onRemove: () -> Unit) {
+  val  isVisible = remember { mutableStateOf(true) }
   val swipeState = rememberSwipeToDismissBoxState(confirmValueChange = { value ->
-    if (value == SwipeToDismissBoxValue.EndToStart) {
-      isRemoved.value = true
-      true
-    } else {
-      false
-    }
+    //      isRemoved.value = true
+    value == SwipeToDismissBoxValue.EndToStart
   })
 
 
   AnimatedVisibility(
-    visible = !isRemoved.value, exit = shrinkVertically(
+    visible = !isVisible.value, exit = shrinkVertically(
       animationSpec = tween(durationMillis = 500), shrinkTowards = Alignment.Top
     ) + fadeOut()
   ) {
@@ -167,8 +171,8 @@ fun Test(chatInfo: Chat, isRemoved: MutableState<Boolean>, onRemove: () -> Unit)
     }
   }
 
-  LaunchedEffect(isRemoved.value) {
-    if (isRemoved.value && swipeState.targetValue == SwipeToDismissBoxValue.EndToStart) {
+  LaunchedEffect(isVisible.value) {
+    if (isVisible.value && swipeState.targetValue == SwipeToDismissBoxValue.EndToStart) {
       delay(500)
       onRemove()
       swipeState.snapTo(SwipeToDismissBoxValue.Settled)
