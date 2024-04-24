@@ -70,10 +70,26 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
     }
   }
 
+  fun updateKeyboardVisibility(isHide: Boolean) {
+    viewModelScope.launch {
+      _state.value = _state.value.copy(hideKeyboard = isHide)
+    }
+  }
+
+  fun updateInfoDialogVisibility(isHide: Boolean) {
+    viewModelScope.launch {
+      _state.value = _state.value.copy(infoDialogOpen = isHide)
+    }
+  }
+
+  fun updateConnectDialogVisibility(isHide: Boolean) {
+    viewModelScope.launch {
+      _state.value = _state.value.copy(connectDialogOpen = isHide)
+    }
+  }
+
   fun connectAndSaveUserData(
-    openDialog: () -> Unit = {},
-    closeDialog: () -> Unit = {},
-    connectedAction: () -> Unit = {}
+    openDialog: () -> Unit = {}, closeDialog: () -> Unit = {}, connectedAction: () -> Unit = {}
   ) {
     viewModelScope.launch {
       if (isUserDataValid()) {

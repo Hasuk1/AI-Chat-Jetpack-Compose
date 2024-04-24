@@ -27,9 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,9 +52,6 @@ fun AuthenticationScreen(
 ) {
   val context = LocalContext.current
   val state by viewModel.state.collectAsState()
-  var hideKeyboard by remember { mutableStateOf(false) }
-  var isAlertDialogOpen by remember { mutableStateOf(false) }
-  var isConnectDialogOpen by remember { mutableStateOf(false) }
   val activeApiButtonColor = MaterialTheme.colorScheme.primary
   val inactiveApiButtonColor = MaterialTheme.colorScheme.secondary
 
@@ -101,7 +95,7 @@ fun AuthenticationScreen(
     ) {
       IconButton(
         onClick = {
-          isAlertDialogOpen = true
+          viewModel.updateInfoDialogVisibility(true)
           viewModel.test()
         }, colors = IconButtonDefaults.iconButtonColors(
           contentColor = MaterialTheme.colorScheme.primary
@@ -110,10 +104,10 @@ fun AuthenticationScreen(
         Icon(AppIcons.Info, contentDescription = "Info")
       }
     }
-    if (isAlertDialogOpen) {
+    if (state.infoDialogOpen) {
       InfoAlertDialog(
-        onDismissRequest = { isAlertDialogOpen = false },
-        onConfirmation = { isAlertDialogOpen = false },
+        onDismissRequest = { viewModel.updateInfoDialogVisibility(false) },
+        onConfirmation = { viewModel.updateInfoDialogVisibility(false) },
         dialogTitle = "Information",
         dialogText = "Some information.\nSome information.\nSome information.\nSome information.",
       )
@@ -121,15 +115,14 @@ fun AuthenticationScreen(
   }, innerPadding = {
     InputUserKeyBar(state = state,
       hint = "ApiKey",
-      hideKeyboard = hideKeyboard,
-      onFocusClear = { hideKeyboard = false },
+      hideKeyboard = state.hideKeyboard,
+      onFocusClear = { viewModel.updateKeyboardVisibility(false) },
       onDone = { viewModel.updateEnteredKey(it) })
     Button(
       onClick = {
-        hideKeyboard = !hideKeyboard
-        viewModel.connectAndSaveUserData(
-          openDialog = { isConnectDialogOpen = true },
-          closeDialog = { isConnectDialogOpen = false },
+        viewModel.updateKeyboardVisibility(!state.hideKeyboard)
+        viewModel.connectAndSaveUserData(openDialog = { viewModel.updateConnectDialogVisibility(true) },
+          closeDialog = { viewModel.updateConnectDialogVisibility(false) },
           connectedAction = goChatList
         )
       },
@@ -148,20 +141,20 @@ fun AuthenticationScreen(
     TextButton(onClick = {
       context.startActivity(
         Intent(
-          Intent.ACTION_VIEW, Uri.parse(state.userSelectedApi.docsUsl)
+          Intent.ACTION_VIEW, Uri.parse(state.userSelectedApi.docsUrl)
         )
       )
     }) {
       Text("Read more about ${state.userSelectedApi.apiName} apikey", fontSize = 16.sp)
     }
-    if (isConnectDialogOpen) {
+    if (state.connectDialogOpen) {
       ConnectDialog(state) {
-        isConnectDialogOpen = false
+        viewModel.updateConnectDialogVisibility(false)
       }
     }
 
   }, changeFocus = {
-    hideKeyboard = !hideKeyboard
+    viewModel.updateKeyboardVisibility(!state.hideKeyboard)
   }, bottomBar = {
     Box(contentAlignment = Alignment.Center,
       modifier = Modifier

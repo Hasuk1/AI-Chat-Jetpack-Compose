@@ -34,7 +34,7 @@ class ChatListViewModel @Inject constructor(
         userId = _state.value.userData.id, name = name, description = description, isVisible = true
       )
       val id = chatsRepository.addNewChat(newChat)
-      Log.d("MyLog", "added new=$id")
+      Log.d("MyLog", "added chatId=$id newChat=$newChat")
     }
   }
 
@@ -47,9 +47,15 @@ class ChatListViewModel @Inject constructor(
       isVisible = false
     )
     viewModelScope.launch {
-      chatsRepository.markAsDeleted(markedChat)
-      delay(1000)
+      chatsRepository.updateChatData(markedChat)
+      delay(800)
       chatsRepository.deleteChat(chat)
+    }
+  }
+
+  fun updateNewChatBottomSheetVisibility(isOpen: Boolean) {
+    viewModelScope.launch {
+      _state.value = _state.value.copy(newChatBottomSheetOpen = isOpen)
     }
   }
 
@@ -62,7 +68,7 @@ class ChatListViewModel @Inject constructor(
     }
   }
 
-  private fun getUserData(): Long {
+  private fun getUserData() {
     viewModelScope.launch(Dispatchers.IO) {
       userRepository.getUserData().collect { userData ->
         Log.d("MyLog", "ChatListViewModel UserData=$userData")
@@ -76,6 +82,5 @@ class ChatListViewModel @Inject constructor(
         }
       }
     }
-    return _state.value.userData.id
   }
 }

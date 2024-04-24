@@ -14,8 +14,8 @@ class ChatsRepositoryImpl @Inject constructor(private val chatsDao: ChatsDao) : 
   override suspend fun addNewChat(chat: Chat): Long =
     chatsDao.addNewChat(chat)
 
-  override suspend fun markAsDeleted(chat: Chat) =
-    chatsDao.markAsDeleted(chat)
+  override suspend fun updateChatData(chat: Chat) =
+    chatsDao.updateChatData(chat)
 
 
   override suspend fun deleteChat(chat: Chat) = chatsDao.deleteChat(chat)

@@ -33,9 +33,7 @@ fun ConnectDialog(
   var isDismissRequestEnable by remember { mutableStateOf(false) }
   Dialog(onDismissRequest = { if (isDismissRequestEnable) toClose() }) {
     Card(
-      modifier = Modifier
-        .width(100.dp)
-        .height(100.dp),
+      modifier = Modifier.size(100.dp),
       shape = RoundedCornerShape(20.dp),
     ) {
       Column(

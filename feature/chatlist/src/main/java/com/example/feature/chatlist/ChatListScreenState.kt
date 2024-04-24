@@ -5,5 +5,6 @@ import com.hassuk1.core.database.model.UserData
 
 data class ChatListScreenState(
   val chatList: List<Chat> = emptyList(),
-  val userData: UserData = UserData()
+  val userData: UserData = UserData(),
+  var newChatBottomSheetOpen: Boolean = false,
 )

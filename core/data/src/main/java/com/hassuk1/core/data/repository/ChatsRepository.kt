@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface ChatsRepository {
   suspend fun getAllChats(userId: Long): Flow<List<Chat>>
   suspend fun addNewChat(chat: Chat): Long
-  suspend fun markAsDeleted(chat: Chat)
+  suspend fun updateChatData(chat: Chat)
   suspend fun deleteChat(chat: Chat)
 }

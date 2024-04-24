@@ -19,7 +19,7 @@ object AppIcons {
   val Check = Icons.Rounded.Check
   val Close = Icons.Rounded.Close
   val Info = Icons.Rounded.Info
-  val MoreVert = Icons.Default.MoreVert
+  val More = Icons.Default.MoreVert
   val Person = Icons.Rounded.Person
   val Search = Icons.Rounded.Search
   val Settings = Icons.Rounded.Settings

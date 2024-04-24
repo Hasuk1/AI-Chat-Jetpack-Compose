@@ -17,7 +17,7 @@ interface ChatsDao {
   suspend fun addNewChat(chat: Chat): Long
 
   @Update
-  suspend fun markAsDeleted(chat: Chat)
+  suspend fun updateChatData(chat: Chat)
 
   @Delete
   suspend fun deleteChat(chat: Chat)
