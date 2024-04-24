@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.feature.chatlist.ChatListScreen
 import com.hassuk1.feature.authentication.AuthenticationScreen
+import com.hassuk1.feature.authentication.ChatScreen
 
 @Composable
 fun AIChatNavHost(navController: NavHostController, startRoute: String) {
@@ -27,29 +28,29 @@ fun AIChatNavHost(navController: NavHostController, startRoute: String) {
       })
 
     }
-//    composable(AIChatAppScreens.CHATCREEN.route, enterTransition = {
-//      fadeIn(
-//        animationSpec = tween(
-//          300, easing = LinearEasing
-//        )
-//      ) + slideIntoContainer(
-//        animationSpec = tween(300, easing = EaseIn),
-//        towards = AnimatedContentTransitionScope.SlideDirection.Start
-//      )
-//    }, exitTransition = {
-//      fadeOut(
-//        animationSpec = tween(
-//          300, easing = LinearEasing
-//        )
-//      ) + slideOutOfContainer(
-//        animationSpec = tween(300, easing = EaseOut),
-//        towards = AnimatedContentTransitionScope.SlideDirection.End
-//      )
-//    }) {
-//      ChatScreen {
-//        navController.navigate(AIChatAppScreens.CHATLISTCREEN.route)
-//      }
-//    }
+    composable(AIChatAppScreens.CHATCREEN.route + "/{chatId}", enterTransition = {
+      fadeIn(
+        animationSpec = tween(
+          300, easing = LinearEasing
+        )
+      ) + slideIntoContainer(
+        animationSpec = tween(300, easing = EaseIn),
+        towards = AnimatedContentTransitionScope.SlideDirection.Start
+      )
+    }, exitTransition = {
+      fadeOut(
+        animationSpec = tween(
+          300, easing = LinearEasing
+        )
+      ) + slideOutOfContainer(
+        animationSpec = tween(300, easing = EaseOut),
+        towards = AnimatedContentTransitionScope.SlideDirection.End
+      )
+    }) {
+      ChatScreen {
+        navController.navigateUp()
+      }
+    }
 
     composable(AIChatAppScreens.CHATLISTCREEN.route, enterTransition = {
       fadeIn(

@@ -43,7 +43,7 @@ import com.hassuk1.core.designsystem.icons.AppIcons
 import com.hassuk1.core.designsystem.icons.AppImageIcons
 
 @Composable
-fun ChatCard(chat: Chat, onDelete: (Chat) -> Unit) {
+fun ChatCard(chat: Chat, onChat:() -> Unit,onDelete: (Chat) -> Unit) {
   var dropdownMenuExpanded by remember { mutableStateOf(false) }
 
   val animatedAlpha by animateFloatAsState(

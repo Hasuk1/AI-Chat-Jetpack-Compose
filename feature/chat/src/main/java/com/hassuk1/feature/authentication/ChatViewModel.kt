@@ -24,6 +24,8 @@
 
 package com.hassuk1.feature.authentication
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.hassuk1.core.model.ApiConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,12 +34,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class ChatViewModel @Inject constructor() : ViewModel() {
+class ChatViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : ViewModel() {
   private val _state = MutableStateFlow(ChatScreenState())
   val state = _state.asStateFlow()
 
-  fun updateSelectedApi(newApi: ApiConfig) {
-    _state.value = _state.value.copy(userSelectedApi = newApi)
-
+  init {
+    savedStateHandle.get<String>("chatId")?.let { chatId ->
+      Log.i("MyLog","chat id=$chatId")
+//      loadProductDetail(productId.toInt())
+    }
   }
 }
