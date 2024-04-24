@@ -10,8 +10,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChatsDao {
+  @Query("SELECT * FROM chats WHERE user_id = :userId ORDER BY id")
+  fun getAllChatsAsc(userId: Long): Flow<List<Chat>>
+
   @Query("SELECT * FROM chats WHERE user_id = :userId ORDER BY id DESC")
-  fun getAllChats(userId: Long): Flow<List<Chat>>
+  fun getAllChatsDesc(userId: Long): Flow<List<Chat>>
 
   @Upsert
   suspend fun addNewChat(chat: Chat): Long

@@ -5,22 +5,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.core.common.OrderType
 import com.example.feature.chatlist.components.AddNewChatBottomSheet
 import com.example.feature.chatlist.components.ChatCard
 import com.example.feature.chatlist.components.ChatListScaffold
@@ -33,16 +34,32 @@ fun ChatListScreen(
   val state by viewModel.state.collectAsState()
   val lazyColumnState = rememberLazyListState()
 
-  var showBottomSheet by remember { mutableStateOf(false) }
-  val keyboardController = LocalSoftwareKeyboardController.current
-
   ChatListScaffold(topBar = {
     IconButton(
-      onClick = {}, colors = IconButtonDefaults.iconButtonColors(
+      onClick = { viewModel.updateOrderSettingsDropdownMenuVisibility(true) },
+      colors = IconButtonDefaults.iconButtonColors(
         contentColor = MaterialTheme.colorScheme.primary
       )
     ) {
       Icon(AppIcons.Settings, contentDescription = "chat-list-settings")
+    }
+    DropdownMenu(
+      expanded = state.orderSettingsDropdownMenuOpen,
+      onDismissRequest = { viewModel.updateOrderSettingsDropdownMenuVisibility(false) },
+      offset = DpOffset(x = (-20).dp, y = 0.dp)
+    ) {
+      DropdownMenuItem(onClick = {
+        viewModel.getAllChats(orderBy = OrderType.NEWEST)
+        viewModel.updateOrderSettingsDropdownMenuVisibility(false)
+      },
+        text = { Text("Newest") },
+        trailingIcon = { Icon(AppIcons.ArrowUp, contentDescription = "chat-order-asc") })
+      DropdownMenuItem(onClick = {
+        viewModel.getAllChats(orderBy = OrderType.OLDEST)
+        viewModel.updateOrderSettingsDropdownMenuVisibility(false)
+      },
+        text = { Text("Oldest") },
+        trailingIcon = { Icon(AppIcons.ArrowDown, contentDescription = "chat-order-desc") })
     }
   }, innerPadding = {
     LazyColumn(
@@ -54,18 +71,17 @@ fun ChatListScreen(
         ChatCard(chat) { viewModel.deleteChat(it) }
       }
     }
-    if (showBottomSheet) {
+    if (state.newChatBottomSheetOpen) {
       AddNewChatBottomSheet(
-        onDismissRequest = { showBottomSheet = false },
+        onDismissRequest = { viewModel.updateNewChatBottomSheetVisibility(false) },
         onAddNewChat = { name, description ->
           viewModel.addNewChat(name, description)
         }
       )
-      keyboardController?.show()
     }
   }, floatingButton = {
     FloatingActionButton(onClick = {
-      showBottomSheet = true
+      viewModel.updateNewChatBottomSheetVisibility(true)
     }, modifier = Modifier.padding(40.dp)) {
       Icon(
         AppIcons.Add, contentDescription = "Add new chat", tint = MaterialTheme.colorScheme.primary

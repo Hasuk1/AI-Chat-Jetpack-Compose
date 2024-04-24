@@ -7,4 +7,5 @@ data class ChatListScreenState(
   val chatList: List<Chat> = emptyList(),
   val userData: UserData = UserData(),
   var newChatBottomSheetOpen: Boolean = false,
+  var orderSettingsDropdownMenuOpen: Boolean = false
 )

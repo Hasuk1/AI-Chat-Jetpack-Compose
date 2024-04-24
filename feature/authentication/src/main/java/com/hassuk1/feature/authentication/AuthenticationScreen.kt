@@ -121,7 +121,8 @@ fun AuthenticationScreen(
     Button(
       onClick = {
         viewModel.updateKeyboardVisibility(!state.hideKeyboard)
-        viewModel.connectAndSaveUserData(openDialog = { viewModel.updateConnectDialogVisibility(true) },
+        viewModel.connectAndSaveUserData(
+          openDialog = { viewModel.updateConnectDialogVisibility(true) },
           closeDialog = { viewModel.updateConnectDialogVisibility(false) },
           connectedAction = goChatList
         )

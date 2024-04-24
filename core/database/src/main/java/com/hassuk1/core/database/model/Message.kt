@@ -13,8 +13,7 @@ import java.util.Date
     parentColumns = ["id"],
     childColumns = ["chat_id"],
     onDelete = ForeignKey.CASCADE
-  )]
-  ,indices = [Index("chat_id")]
+  )], indices = [Index("chat_id")]
 )
 data class Message(
   @PrimaryKey(autoGenerate = true) val id: Long = 0,

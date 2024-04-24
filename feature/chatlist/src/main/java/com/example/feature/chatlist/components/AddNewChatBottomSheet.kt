@@ -19,18 +19,14 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -42,26 +38,18 @@ fun AddNewChatBottomSheet(
   onDismissRequest: () -> Unit,
   onAddNewChat: (String, String) -> Unit,
 ) {
-  var isChatNameEmpty by remember { mutableStateOf(false) }
   val sheetState = rememberModalBottomSheetState()
   var newChatNameText by remember { mutableStateOf("") }
-  var newChatDescriptionText by remember { mutableStateOf("") }
+  var newChatCommentText by remember { mutableStateOf("") }
   var isChatNameFocused by remember { mutableStateOf(false) }
-  var isChaCommentFocused by remember { mutableStateOf(false) }
-
-  val keyboardController = LocalSoftwareKeyboardController.current
-  val focusRequester = remember { FocusRequester() }
+  var isChatCommentFocused by remember { mutableStateOf(false) }
+  var chatNameError by remember { mutableStateOf(false) }
+  var chatCommentError by remember { mutableStateOf(false) }
 
   ModalBottomSheet(
     onDismissRequest = onDismissRequest,
     sheetState = sheetState,
   ) {
-
-    LaunchedEffect(Unit) {
-      focusRequester.requestFocus()
-      keyboardController?.show()
-    }
-
     Column(
       modifier = Modifier
         .fillMaxSize()
@@ -84,18 +72,18 @@ fun AddNewChatBottomSheet(
       ) {
         OutlinedTextField(
           value = newChatNameText,
-          onValueChange = { if (newChatNameText.length <= 23) newChatNameText = it },
+          onValueChange = { newChatNameText = it },
           modifier = Modifier
             .fillMaxSize()
-            .onFocusChanged { isChatNameFocused = it.isFocused }
-            .focusRequester(focusRequester),
-          isError = isChatNameEmpty,
+            .onFocusChanged { isChatNameFocused = it.isFocused },
+          isError = chatNameError,
           textStyle = TextStyle(fontSize = 20.sp),
           singleLine = true,
           label = { Text("Chat name", fontSize = 16.sp) },
           colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
+            errorBorderColor = Color.Transparent,
           )
         )
         Box(
@@ -103,7 +91,7 @@ fun AddNewChatBottomSheet(
             .padding(start = 15.dp, end = 15.dp, bottom = 5.dp)
             .fillMaxWidth()
             .animateContentSize()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(if (chatNameError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary)
             .height(if (isChatNameFocused) 3.dp else 1.dp)
         )
       }
@@ -115,18 +103,19 @@ fun AddNewChatBottomSheet(
         contentAlignment = Alignment.BottomCenter
       ) {
         OutlinedTextField(
-          value = newChatDescriptionText,
-          onValueChange = { if (newChatDescriptionText.length <= 23) newChatDescriptionText = it },
+          value = newChatCommentText,
+          onValueChange = { newChatCommentText = it },
           modifier = Modifier
             .fillMaxSize()
-            .onFocusChanged { isChaCommentFocused = it.isFocused },
-          isError = isChatNameEmpty,
+            .onFocusChanged { isChatCommentFocused = it.isFocused },
+          isError = chatCommentError,
           textStyle = TextStyle(fontSize = 20.sp),
           singleLine = true,
           label = { Text("Comment", fontSize = 16.sp) },
           colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
+            errorBorderColor = Color.Transparent,
           )
         )
         Box(
@@ -134,17 +123,18 @@ fun AddNewChatBottomSheet(
             .padding(start = 15.dp, end = 15.dp, bottom = 5.dp)
             .fillMaxWidth()
             .animateContentSize()
-            .background(MaterialTheme.colorScheme.primary)
-            .height(if (isChaCommentFocused) 3.dp else 1.dp)
+            .background(if (chatCommentError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary)
+            .height(if (isChatCommentFocused) 3.dp else 1.dp)
         )
       }
       Button(
         onClick = {
-          if (newChatNameText.isNotEmpty()) {
-            onAddNewChat(newChatNameText, newChatDescriptionText)
+          if (newChatNameText.isNotEmpty() && newChatCommentText.isNotEmpty()) {
+            onAddNewChat(newChatNameText, newChatCommentText)
             onDismissRequest()
           } else {
-            isChatNameEmpty = true
+            if (newChatNameText.isEmpty()) chatNameError = true else chatNameError = false
+            if (newChatCommentText.isEmpty()) chatCommentError = true else chatCommentError = false
           }
         },
         modifier = Modifier
@@ -161,6 +151,5 @@ fun AddNewChatBottomSheet(
       }
     }
   }
-
 }
 
