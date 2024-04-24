@@ -4,10 +4,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,9 +31,7 @@ fun ConnectDialog(
   var isDismissRequestEnable by remember { mutableStateOf(false) }
   Dialog(onDismissRequest = { if (isDismissRequestEnable) toClose() }) {
     Card(
-      modifier = Modifier
-        .width(100.dp)
-        .height(100.dp),
+      modifier = Modifier.size(100.dp),
       shape = RoundedCornerShape(20.dp),
     ) {
       Column(

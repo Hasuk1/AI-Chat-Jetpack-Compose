@@ -36,6 +36,7 @@ import com.hassuk1.core.data.repository.UserDataRepository
 import com.hassuk1.core.database.model.UserData
 import com.hassuk1.core.model.ApiConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,10 +70,26 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
     }
   }
 
+  fun updateKeyboardVisibility(isHide: Boolean) {
+    viewModelScope.launch {
+      _state.value = _state.value.copy(hideKeyboard = isHide)
+    }
+  }
+
+  fun updateInfoDialogVisibility(isHide: Boolean) {
+    viewModelScope.launch {
+      _state.value = _state.value.copy(infoDialogOpen = isHide)
+    }
+  }
+
+  fun updateConnectDialogVisibility(isHide: Boolean) {
+    viewModelScope.launch {
+      _state.value = _state.value.copy(connectDialogOpen = isHide)
+    }
+  }
+
   fun connectAndSaveUserData(
-    openDialog: () -> Unit = {},
-    closeDialog: () -> Unit = {},
-    connectedAction: () -> Unit = {}
+    openDialog: () -> Unit = {}, closeDialog: () -> Unit = {}, connectedAction: () -> Unit = {}
   ) {
     viewModelScope.launch {
       if (isUserDataValid()) {
@@ -120,9 +137,9 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
   }
 
   private fun getUserData() {
-    viewModelScope.launch {
+    viewModelScope.launch(Dispatchers.IO) {
       userRepository.getUserData().collect { userData ->
-        Log.d("MyLog", "Api=$userData")
+        Log.d("MyLog", "AuthenticationViewModel UserData=$userData")
         userData?.let {
           _state.value = _state.value.copy(
             userEnteredKey = userData.userKey,

@@ -28,7 +28,10 @@ import com.example.core.common.Result
 import com.hassuk1.core.model.ApiConfig
 
 data class AuthenticationScreenState(
-  val userEnteredKey: String = "",
+  var userEnteredKey: String = "",
   var userSelectedApi: ApiConfig = ApiConfig.NEURO,
-  var connectedToApiStatus: Result? = null
+  var connectedToApiStatus: Result? = null,
+  var hideKeyboard: Boolean = false,
+  var infoDialogOpen: Boolean = false,
+  var connectDialogOpen: Boolean = false
 )
