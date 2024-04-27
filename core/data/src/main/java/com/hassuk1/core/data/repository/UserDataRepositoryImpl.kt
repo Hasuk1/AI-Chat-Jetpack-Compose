@@ -53,32 +53,6 @@ class UserDataRepositoryImpl @Inject constructor(
       }
     }
   }
-
-  override suspend fun getCompletionToPromt(
-    requestDTO: ChatCompletionRequestDTO, userKey: String
-  ): Flow<Resource<ChatCompletionResponseDTO>> {
-    return flow {
-      emit(Resource.Loading())
-      try {
-        val chatResponse = api.getCompletionToPromt(
-          authToken = userKey, chatCompletionRequestDTO = requestDTO
-        )
-        emit(Resource.Success(chatResponse))
-      } catch (e: HttpException) {
-        e.printStackTrace()
-        emit(Resource.Error(e.localizedMessage ?: "Unexpected error"))
-        return@flow
-      } catch (e: IOException) {
-        e.printStackTrace()
-        emit(Resource.Error("Couldn't reach server. Check your internet connection."))
-        return@flow
-      } catch (e: Exception) {
-        e.printStackTrace()
-        emit(Resource.Error(e.localizedMessage ?: "Unexpected error"))
-        return@flow
-      }
-    }
-  }
 }
 
 

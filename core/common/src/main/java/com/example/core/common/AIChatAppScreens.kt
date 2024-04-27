@@ -1,4 +1,4 @@
-package com.hassuk1.aichat.navigation
+package com.example.core.common
 
 enum class AIChatAppScreens(val route: String) {
   AUTHSCREEN("AuthScreen"),

@@ -3,6 +3,7 @@ package com.hassuk1.core.database
 import android.content.Context
 import androidx.room.Room
 import com.hassuk1.core.database.dao.ChatsDao
+import com.hassuk1.core.database.dao.MessagesDao
 import com.hassuk1.core.database.dao.UserDataDao
 import dagger.Module
 import dagger.Provides
@@ -29,5 +30,10 @@ object DatabaseModule {
   @Provides
   fun provideChatsDao(database: AppDatabase): ChatsDao {
     return database.chatsDao()
+  }
+
+  @Provides
+  fun provideMessagesDao(database: AppDatabase): MessagesDao {
+    return database.messageDao()
   }
 }

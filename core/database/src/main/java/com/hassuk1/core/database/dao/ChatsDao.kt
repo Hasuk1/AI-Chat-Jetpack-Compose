@@ -16,6 +16,9 @@ interface ChatsDao {
   @Query("SELECT * FROM chats WHERE user_id = :userId ORDER BY id DESC")
   fun getAllChatsDesc(userId: Long): Flow<List<Chat>>
 
+  @Query("SELECT * FROM chats WHERE id = :chatId LIMIT 1")
+  fun getChatDataById(chatId:Long):Flow<Chat?>
+
   @Upsert
   suspend fun addNewChat(chat: Chat): Long
 

@@ -32,7 +32,7 @@ class ChatListViewModel @Inject constructor(
   fun addNewChat(name: String, description: String) {
     viewModelScope.launch {
       val newChat = Chat(
-        userId = _state.value.userData.id, name = name, description = description, isVisible = true
+        userId = _state.value.userId, name = name, description = description, isVisible = true
       )
       val id = chatsRepository.addNewChat(newChat)
       Log.d("MyLog", "added chatId=$id newChat=$newChat")
@@ -66,7 +66,7 @@ class ChatListViewModel @Inject constructor(
     }
   }
 
-  fun getAllChats(userId: Long = _state.value.userData.id, orderBy: OrderType = OrderType.NEWEST) {
+  fun getAllChats(userId: Long = _state.value.userId, orderBy: OrderType = OrderType.NEWEST) {
     Log.d("MyLog", "getAllChats userId=$userId")
     viewModelScope.launch(Dispatchers.IO) {
       chatsRepository.getAllChats(userId, orderBy).collectLatest { chats ->
@@ -81,9 +81,7 @@ class ChatListViewModel @Inject constructor(
         Log.d("MyLog", "ChatListViewModel UserData=$userData")
         userData?.let {
           _state.value = _state.value.copy(
-            userData = UserData(
-              id = it.id, selectedApiUrl = it.selectedApiUrl, userKey = it.userKey
-            )
+            userId = it.id
           )
           getAllChats(userData.id)
         }

@@ -96,7 +96,6 @@ fun AuthenticationScreen(
       IconButton(
         onClick = {
           viewModel.updateInfoDialogVisibility(true)
-          viewModel.test()
         }, colors = IconButtonDefaults.iconButtonColors(
           contentColor = MaterialTheme.colorScheme.primary
         )

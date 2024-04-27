@@ -50,7 +50,7 @@ fun ChatCard(chat: Chat, onChat:() -> Unit,onDelete: (Chat) -> Unit) {
     targetValue = if (chat.isVisible) 1.0f else 0f, label = "alpha"
   )
   Row(modifier = Modifier
-    .clickable(onClick = { })
+    .clickable(onClick = onChat)
     .padding(horizontal = 5.dp)
     .graphicsLayer {
       alpha = animatedAlpha

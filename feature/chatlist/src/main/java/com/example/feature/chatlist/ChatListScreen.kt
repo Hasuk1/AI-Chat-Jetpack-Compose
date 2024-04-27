@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.core.common.AIChatAppScreens
 import com.example.core.common.OrderType
 import com.example.feature.chatlist.components.AddNewChatBottomSheet
 import com.example.feature.chatlist.components.ChatCard
@@ -68,16 +69,16 @@ fun ChatListScreen(
         .padding(vertical = 5.dp), state = lazyColumnState
     ) {
       items(state.chatList) { chat ->
-        ChatCard(chat) { viewModel.deleteChat(it) }
+        ChatCard(chat = chat,
+          onChat = { navController.navigate(AIChatAppScreens.CHATCREEN.route + "/${chat.id}") },
+          onDelete = { viewModel.deleteChat(it) })
       }
     }
     if (state.newChatBottomSheetOpen) {
-      AddNewChatBottomSheet(
-        onDismissRequest = { viewModel.updateNewChatBottomSheetVisibility(false) },
+      AddNewChatBottomSheet(onDismissRequest = { viewModel.updateNewChatBottomSheetVisibility(false) },
         onAddNewChat = { name, description ->
           viewModel.addNewChat(name, description)
-        }
-      )
+        })
     }
   }, floatingButton = {
     FloatingActionButton(onClick = {

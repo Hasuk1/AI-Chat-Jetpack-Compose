@@ -14,9 +14,4 @@ interface UserDataRepository {
   suspend fun checkUserDataWithApi(
     selectedApiUrl: String, userKey: String
   ): Flow<Resource<ModelResponse>>
-
-  suspend fun getCompletionToPromt(
-    requestDTO: ChatCompletionRequestDTO,
-    userKey: String
-  ): Flow<Resource<ChatCompletionResponseDTO>>
 }

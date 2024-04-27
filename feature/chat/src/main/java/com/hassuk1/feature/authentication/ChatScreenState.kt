@@ -24,8 +24,12 @@
 
 package com.hassuk1.feature.authentication
 
-import com.hassuk1.core.model.ApiConfig
+import com.example.core.network.dto.model.Message
 
 data class ChatScreenState(
-  val userInputChat:String = ""
+  val chatId: Long = 0,
+  val chatName:String = "",
+  val userApiKey:String = "",
+  val userPromt:String = "",
+  val messageList: List<Message> = emptyList()
 )

@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import com.hassuk1.aichat.navigation.AIChatAppScreens
+import com.example.core.common.AIChatAppScreens
 import com.hassuk1.aichat.navigation.AIChatNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setContent {
       val navController = rememberNavController()
-      AIChatNavHost(navController, AIChatAppScreens.AUTHSCREEN.route)
+      AIChatNavHost(navController, com.example.core.common.AIChatAppScreens.AUTHSCREEN.route)
     }
   }
 }

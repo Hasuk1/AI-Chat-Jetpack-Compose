@@ -160,32 +160,4 @@ class AuthenticationViewModel @Inject constructor(private val userRepository: Us
       false
     }
   }
-
-  fun test() {
-    viewModelScope.launch {
-      userRepository.getCompletionToPromt(
-        requestDTO = ChatCompletionRequestDTO(
-          messages = listOf(
-            Message(
-              content = "Say this is a test", role = "user"
-            )
-          )
-        ), userKey = _state.value.userEnteredKey
-      ).collectLatest { resource ->
-        when (resource) {
-          is Resource.Success -> {
-            Log.d("MyLog", "Answer->${resource.data}")
-          }
-
-          is Resource.Error -> {
-            Log.d("MyLog", "Error->${resource.message}")
-          }
-
-          is Resource.Loading -> {
-            Log.d("MyLog", "Loading answer")
-          }
-        }
-      }
-    }
-  }
 }

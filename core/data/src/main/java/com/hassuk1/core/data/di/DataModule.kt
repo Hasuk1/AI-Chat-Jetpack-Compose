@@ -2,6 +2,8 @@ package com.hassuk1.core.data.di
 
 import com.example.core.network.AiChatApi
 import com.example.core.network.BaseUrlInterceptor
+import com.hassuk1.core.data.repository.ChatRepository
+import com.hassuk1.core.data.repository.ChatRepositoryImpl
 import com.hassuk1.core.data.repository.ChatsRepository
 import com.hassuk1.core.data.repository.ChatsRepositoryImpl
 import com.hassuk1.core.data.repository.UserDataRepository
@@ -30,5 +32,11 @@ object DataModule {
   @ViewModelScoped
   fun provideChatsRepository(chatsDao: ChatsDao): ChatsRepository {
     return ChatsRepositoryImpl(chatsDao)
+  }
+
+  @Provides
+  @ViewModelScoped
+  fun provideChatRepository(chatsDao: ChatsDao, api: AiChatApi): ChatRepository {
+    return ChatRepositoryImpl(chatsDao = chatsDao, api = api)
   }
 }
